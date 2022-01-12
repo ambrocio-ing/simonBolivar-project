@@ -94,7 +94,7 @@ export class FichaAsistenciaComponent implements OnInit {
     this.faservicio.descargarFicha(this.clase.idclase).subscribe(dato => {
       const blob = new Blob([dato],{type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
       let numero = Math.round(Math.random() * (12 - 10 )+10);
-      saveAs(blob, numero+''+this.clase.tema.replace(/\s+/g,'')+'ficha.xlsx');  
+      saveAs(blob, numero+''+this.clase.tema.replace(/\s+/g,'')+'ficha.xls');  
     }, err => {
       alert("Ficha asistencia para esta clase no fue encontrado");
     });
