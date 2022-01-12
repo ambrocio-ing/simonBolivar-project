@@ -1,0 +1,76 @@
+<div class="stilo-modal" *ngIf="visibleModal">
+    <div  class="modal" tabindex="-1" style="display: block;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button (click)="cerrarModal()" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <ul *ngIf="empleado" class="list-group text-dark">
+                                    <li class="list-group-item active">
+                                        <h5>Administrar foto de alumno</h5>
+                                    </li>
+                                    <li class="list-group-item">{{empleado.nombre}}</li>
+                                    <li class="list-group-item">{{empleado.apellidos}}</li>
+                                </ul>
+                                <div class="input-group mt-4">
+                                    <label>Foto:</label>
+                                </div>
+                                <div class="input-group">
+                                    <input (change)="capturarFoto($event)" type="file" class="form-control"
+                                        id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
+                                        aria-label="Upload"
+                                    >                                                                        
+                                </div>
+                                <p *ngIf="mensajeErrorFoto">{{mensajeErrorFoto}}</p>
+                                <div class="input-group mt-4">
+                                    <label>CV:</label>
+                                </div>
+                                <div class="input-group">
+                                    <input (change)="capturarCV($event)" type="file" class="form-control"
+                                        id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
+                                        aria-label="Upload"
+                                    >                                     
+                                </div>
+                                <p *ngIf="mensajeErrorCV">{{mensajeErrorCV}}</p>
+
+                                <div *ngIf="progreso > 0" class="progress mt-2">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar"
+                                        [ngStyle]="{width:progreso+'%'}" attr.aria-valuenow="{{progreso}}"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                        {{progreso}}%
+                                    </div>
+                                    
+                                </div>
+                                <div class="mt-2">
+                                    <a href="{{urlBackend}}/archivos/cv/{{empleado.cv}}" >
+                                        {{empleado.cv}}
+                                    </a>
+                                </div>
+                                <div>
+                                    <button (click)="guardar()" [disabled]="!estadoBoton"
+                                        class="btn btn-primary form-control mt-4" type="button"
+                                        id="inputGroupFileAddon04">Guardar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+
+                                <img *ngIf="empleado?.foto" width="300px" height="350px"
+                                    src="{{urlBackend}}/archivos/foto/{{empleado.foto}}" alt="{{empleado.foto}}"
+                                    class="img-thumbnail rounded"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h5>Formulario para asignar tutor</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <form [formGroup]="formTutor" (ngSubmit)="enviar($event)">
+                        <input type="hidden" formControlName="idtutor">
+                        <div class="row">
+
+                            <div class="form-group">
+                                <label for="fecha">Fecha:</label>
+                                <input type="date" formControlName="fecha" class="form-control">
+                                <p *ngIf="formTutor.get('fecha').hasError('required') && 
+                                    formTutor.get('fecha').touched ">
+                                    Campo requerido
+                                </p>                                
+                            </div>
+                            <div class="form-group">
+                                <label for="descripcion">Descripción : </label>
+                                <textarea rows="3" formControlName="descripcion" class="form-control"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="empleado">Docente:</label>
+                                <select formControlName="empleado" class="form-control" [compareWith]="compararEmpleado">                                    
+                                    <option *ngFor="let empleado of empleados" [ngValue]="empleado">
+                                        {{empleado.nombre}},{{empleado.apellidos}}
+                                    </option>
+                                </select>
+                                <p *ngIf="formTutor.get('empleado').hasError('required') && 
+                                    formTutor.get('empleado').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="grado">Selecione Grado:</label>
+                                <select formControlName="grado" class="form-control" [compareWith]="compararGrados">                                    
+                                    <option *ngFor="let grado of grados" [ngValue]="grado">
+                                        {{grado.nombre_grado}}
+                                    </option>
+                                </select>
+                                <p *ngIf="formTutor.get('grado').hasError('required') && 
+                                    formTutor.get('grado').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="seccion">Sección:</label>
+                                <select formControlName="seccion" class="form-control" [compareWith]="compararSecciones">                                    
+                                    <option *ngFor="let seccion of secciones" [ngValue]="seccion">
+                                        {{seccion.nombre_seccion}}
+                                    </option>
+                                </select>
+                                <p *ngIf="formTutor.get('seccion').hasError('required') && 
+                                    formTutor.get('seccion').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <input *ngIf="botonGuardar" type="submit"
+                                    class="btn btn-primary form-control mt-2" value="Guardar">
+                                <input *ngIf="botonEditar" type="submit"
+                                    class="btn btn-primary form-control mt-2" value="Editar">
+                                
+                            </div>
+                            <div class="form-group">
+                                <button (click)="cancelar()" type="button" class="btn btn-danger form-control mt-2">
+                                    Cancelar
+                                </button>
+                            </div>                                                        
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-8" style="overflow: scroll;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="3">
+                                    <h5>Lista Asignaciones</h5>
+                                </th>
+                                <th scope="col" colspan="2">
+                                    <input type="search" [formControl]="formBuscar" class="form-control"
+                                        placeholder="Ingrese Nombre del curso">
+                                </th>
+                                <th scope="col">
+                                    <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">ID</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Empleado</th>
+                                <th scope="col">Periodo</th>                                
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let tutor of tutores" class="text-center">
+                                <td width="20px">{{tutor.idtutor}}</td>
+                                <td width="50px">{{tutor.fecha | date : "dd/MM/yyyy"}}</td>
+                                <td>{{tutor.descripcion}}</td>
+                                <td>{{tutor.empleado.nombre}}, {{tutor.empleado.apellidos}}</td>
+                                <td>{{tutor.grado.nombre_grado}}, {{tutor.seccion.nombre_seccion}}</td>
+                                <td>                                    
+                                    <a (click)="eliminar(tutor)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtener(tutor)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <p *ngIf="mensaje">
+                        {{mensaje}}
+                    </p>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+</div>

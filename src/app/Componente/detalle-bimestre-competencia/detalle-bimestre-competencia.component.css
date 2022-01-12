@@ -1,0 +1,40 @@
+/*
+
+
+td , th{
+    border: 1px solid black;  
+    width: 100px;
+    word-wrap: break-word;
+}
+
+
+.vertical-text{
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    
+}*/
+
+table{
+    
+    border-collapse: collapse;
+        
+}
+
+.vertical-text{
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    
+}
+
+td , th{
+    border: 1px solid black;      
+}
+
+table tr:hover{
+    background: #ccc;
+}
+
+span{
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+}

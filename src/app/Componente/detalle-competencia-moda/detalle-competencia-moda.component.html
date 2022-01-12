@@ -1,0 +1,54 @@
+<div class="stilo-modal" *ngIf="visible">
+    <div class="modal" tabindex="-1" style="display: block;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button (click)="cerrarModal()" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div *ngIf="resultadoact" class="card">
+                            <div class="card-header">
+                                <h6>Edite Resultado de actividad</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul *ngIf="resultadoact" class="list-group text-dark">
+                                    <li class="list-group-item active">
+                                        {{resultadoact.fecha | date : 'dd/MM/yyyy'}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h6 style="color: blue;">Nomre del alumno:</h6>{{resultadoact.nombre_alumno}}, {{resultadoact.apellidos_alumno}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h6 style="color: blue;">Nota:</h6>{{resultadoact.nota}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <label for="">INgrese nueva nota:</label>
+                                        <input type="number" max="20" min="1" [formControl]="nota_entregado">
+                                        <p *ngIf="nota_entregado.hasError('required') && nota_entregado.touched">
+                                            Campo requerido
+                                        </p>
+                                        <p
+                                            *ngIf="nota_entregado.hasError('max') && (nota_entregado.touched || nota_entregado.dirty)">
+                                            Campo no válido
+                                        </p>
+                                        <p
+                                            *ngIf="nota_entregado.hasError('min') && (nota_entregado.touched || nota_entregado.dirty)">
+                                            Campo no válido
+                                        </p>
+                                    </li>
+                                    <button (click)="editar(resultadoact)" class="btn btn-primary">Editar</button>
+                                </ul>
+                            </div>
+                        </div>
+                       
+                    </div>
+   
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

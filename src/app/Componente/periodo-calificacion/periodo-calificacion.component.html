@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h5>Gestión de periodos</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4"> 
+                    <form [formGroup]="fperiodo" (ngSubmit)="enviar($event)">
+                        <input type="hidden" formControlName="fidperiodo">
+                        <div class="form-group">
+                            <label for="">Ingrese Fecha Inicio</label>
+                            <input type="date" formControlName="finicio" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Ingrese Fecha Fin</label>
+                            <input type="date" formControlName="ffin" class="form-control">
+                        </div>
+                        <div class="form-group mt-3">                    
+                            <input *ngIf="botonGuardar" type="submit" value="Guardar" class="btn btn-primary margen">
+                            <input *ngIf="botonEditar" type="submit" value="Editar" class="btn btn-primary margen">
+                            <button (click)="cancelar()" class="btn btn-danger margen" type="button">Cancelar</button>
+                        </div>
+                        <div class="form-group">
+                            
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-8" style="overflow: scroll;">
+                    <h5>Lista de permisos</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr bgcolor="skyblue">
+                                <th scope="col">ID</th>
+                                <th scope="col">Fecha Inicio</th>
+                                <th scope="col">Fecha Fin</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let periodo of periodos">
+                                <td>{{periodo.idperiodo}}</td>
+                                <td>{{periodo.finicio | date : 'dd/MM/yyyy'}}</td>
+                                <td>{{periodo.ffin | date : 'dd/MM/yyyy'}}</td>
+                                <td>
+                                    <a (click)="eliminar(periodo)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtener(periodo)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p *ngIf="mensaje">
+                        {{mensaje}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>    
+    
+</div>

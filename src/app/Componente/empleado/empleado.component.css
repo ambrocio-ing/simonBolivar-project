@@ -1,0 +1,9 @@
+p{
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.file-input{
+    display: none;
+}
+

@@ -1,0 +1,189 @@
+<div class="detalle">
+    <p #inicio></p>
+</div>
+<div>
+    <app-alumno></app-alumno>
+</div>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h4>Formulario para administrar detalles de alumno</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div>
+                        <input type="hidden" [formControl]="formIddetalleAlumno">
+                    </div>
+                    <div class="form-group">
+                        <label for="periodo">Periodo Lectivo:</label>
+                        <input type="date" [formControl]="formPeriodo" class="form-control">
+                        <p *ngIf="formPeriodo.hasError('required') && formPeriodo.touched">
+                            Campo requerido
+                        </p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nombre_grado">Grado:</label>
+                        <select [formControl]="formGrado" class="form-control" [compareWith]="compararGrados">
+                            
+                            <option *ngFor = "let grado of grados" [ngValue]="grado">
+                                {{grado.nombre_grado}}
+                            </option>
+                            
+                        </select> 
+                        <p *ngIf="formGrado.hasError('required') && formGrado.touched">
+                            Campo requerido
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="hidden" [formControl]="formIdalumno">
+                        <label for="nombre_alumno">Alumno:</label>
+                        <input type="text" [formControl]="formNombreAlumno" class="form-control" readonly>
+                        <p *ngIf="formIdalumno.hasError('required') && formIdalumno.touched">
+                            Campo requerido
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <button (click)="navegar(inicio)" class="btn btn-info form-control seleccionar">
+                            Selecionar alumno
+                        </button>
+                    </div>
+                    
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="nombre_seccion">Sección:</label>
+                        <select [formControl]="formSeccion" class="form-control" [compareWith]="compararSecciones">
+                           
+                            <option *ngFor = "let seccion of secciones" [ngValue]="seccion" >
+                                {{seccion.nombre_seccion}}
+                            </option>
+                            
+                        </select>
+                        <p *ngIf="formSeccion.hasError('required') && formSeccion.touched">
+                            Campo requerido
+                        </p> 
+                    </div>
+                    <div class="form-group">
+                        <button *ngIf="estadoAgregar" (click)="agregar()" class="btn btn-primary form-control guardar">
+                            Agregar
+                        </button>
+                        <button *ngIf="estadoEditar" (click)="enviar()" class="btn btn-primary form-control guardar">
+                            Editar
+                        </button>
+                                                
+                    </div>
+
+                    <div class="form-group">
+                        <button (click)="Limpiar()" class="btn btn-danger form-control limpiar">Limpiar</button>
+                    </div>
+                    
+                </div>
+                
+            </div>
+
+            <div class="row mt-4" style="overflow: scroll;">
+                <table class="table table-striped">
+                    <thead>                        
+                        <tr bgcolor="skyblue" class="text-center">
+                            <th scope="col" style="display: none;">ID</th>                            
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Alumno</th>
+                            <th scope="col">Grado</th>
+                            <th scope="col">Sección</th>                            
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let detalleAlumno of detalle_alumnos" class="text-center">
+                            <td style="display: none;">{{detalleAlumno.iddetalle_alumno}}</td>                           
+                            <td>{{detalleAlumno.periodo | date: 'dd-MM-yyyy'}}</td> 
+                            <td>{{detalleAlumno.alumno.nombre}},{{detalleAlumno.alumno.apellidos}}</td>
+                            <td>{{detalleAlumno.grado.nombre_grado}}</td>
+                            <td>{{detalleAlumno.seccion.nombre_seccion}}</td>                                                       
+                            <td class="text-center">                                
+                                <a (click)="eliminar(detalleAlumno)" class="eliminar">
+                                    <img style="width: 25px; height: 25;" src="./assets/img/delete.png">
+                                </a>                                
+                            </td>                                
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5"></div>
+                <div class="col-md-5"></div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <button *ngIf="estadoGuardar" (click)="enviar()" class="btn btn-primary form-control guardar">
+                            Guardar
+                        </button>                                                
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4" style="overflow: scroll;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" colspan="3">
+                                <h4>Lista de matrículas</h4>
+                            </th>
+                            <th scope="col" colspan="2">
+                                <input [formControl]="formBuscar" type="search" class="form-control" placeholder="Ingrese nombre o dni">
+                                
+                            </th>
+                            <th scope="col" width="200px" class="text-center">
+                                <button style="margin-left: 15px;" (click)="Buscar()" class="btn btn-success ">Buscar</button>
+                                <a (click)="listar()" style="margin-left: 10px; cursor: pointer;">
+                                    <img style="width: 40px; height: 40px;" src="./assets/img/refresh.jpeg">
+                                </a>
+                            </th>
+
+                        </tr>
+                        <tr bgcolor="skyblue" class="text-center">
+                            <th width="50px" scope="col">ID</th>
+                            <th width="50px" scope="col">Periodo</th>
+                            <th width="450px" scope="col">Alumno</th>
+                            <th scope="col">Grado</th>
+                            <th scope="col">Sección</th>                            
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let detalleAlumno of detalleAlumnos" class="text-center">
+                            <td>{{detalleAlumno.iddetalle_alumno}}</td>
+                            <td>{{detalleAlumno.periodo | date : "dd/MM/yyyy"}}</td> 
+                            <td width="450px">{{detalleAlumno.alumno.nombre}}, {{detalleAlumno.alumno.apellidos}}</td>
+                            <td>{{detalleAlumno.grado.nombre_grado}}</td>
+                            <td>{{detalleAlumno.seccion.nombre_seccion}}</td>                                                       
+                            <td >                                
+                                <a class="eliminar">
+                                    <img style="width: 25px; height: 25;" src="./assets/img/delete.png">
+                                </a>
+                                <a (click)="obtener(detalleAlumno)" class="editar">
+                                    <img style="width: 25px; height: 25; " src="./assets/img/editpaste.png">
+                                </a>
+                            </td>                                
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+                <p *ngIf="mensaje">
+                    {{mensaje}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

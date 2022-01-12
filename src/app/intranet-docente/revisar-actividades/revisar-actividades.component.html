@@ -1,0 +1,90 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                           
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                      Revisar entregas:
+                                    </h5>
+                                </a>
+
+                            </li>
+
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>
+                            <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                                <h3 style="color: black;">
+                                    {{ususervicio.usuario.empleado.nombre}},{{ususervicio.usuario.empleado.apellidos}}
+                                </h3>
+                            </li>
+                            <li class="nav-item">
+                                <a (click)="irAperfil()" class="btn btn-outline-success"
+                                    style="margin-left: 5px; cursor:pointer;" aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Actividad
+                                    </h5>
+                                </a>
+                            </li>
+                        </ul>
+
+                    
+                </div>
+            </nav>
+        </div>
+        <div class="card-body">
+            <div class="row" style="overflow: scroll;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" colspan="2">
+                                <h4>Entregas</h4>
+                            </th>                                                 
+
+                        </tr>
+                        <tr bgcolor="skyblue" class="text-center">
+                            <th scope="col">Alumno</th>
+                            <th scope="col">Descripción</th>                                
+                            <th scope="col">F/Entrega</th>  
+                            <th width="80px" scope="col">Documento</th>                                                            
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let mactividad of mactividadlista" class="text-center">
+                            <td>
+                                {{mactividad.nombre_alumno}}
+                            </td>                               
+                            <td>{{mactividad.descripcion}}</td>                                
+                            <td>{{mactividad.fecha_entrega | date : 'dd/MM/yyyy'}}</td>
+                            <td>
+                                <a *ngIf="mactividad?.archivo" href="{{urlBackend}}/archivos/aemostrar/{{mactividad.archivo}}">
+                                    Descargar
+                                </a>
+                                <p *ngIf="!mactividad?.archivo">
+                                    Sin archivo
+                                </p>
+                            </td> 
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+                <p *ngIf="mensaje">
+                    {{mensaje}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,240 @@
+<app-alumno-foto *ngIf="alumnoSeleccionado" [alumno]="alumnoSeleccionado" [visibleFoto]="modalFotoEstado" (cerrarFoto)="modalFotoEstado = $event"></app-alumno-foto>
+<div class="container mt-1">     
+    <div class="card">      
+        <div class="card-header">            
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            
+                             <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Formulario para administrar alumnos
+                                    </h5>
+                                </a>
+                                
+                            </li>                   
+                
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>
+                            <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                                <h3 style="color: black;">
+                                    {{ususervicio.usuario.empleado.nombre}}, {{ususervicio.usuario.empleado.apellidos}}
+                                </h3>
+                            </li>
+                            <li class="nav-item" style="text-align: right;">
+                                <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li>
+                        </ul>
+            
+                    
+                </div>
+            </nav>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <form [formGroup]="formAlumno" (ngSubmit)="save($event)">
+                    <input type="hidden" formControlName="idalumno">
+                    <input type="hidden" formControlName="acceso">                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="dni">DNI:</label>
+                                <input type="text" formControlName="dni" class="form-control">                                
+                                <p *ngIf="(fa.dni.touched) && fa.dni.hasError('required')">
+                                    {{mensaje_campo}}
+                                                                       
+                                </p>
+                                <p *ngIf="(fa.dni.touched || fa.dni.dirty) && fa.dni.hasError('pattern')">
+                                    {{mensaje_no}}                                     
+                                </p> 
+                                   
+                            </div>
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" formControlName="nombre" class="form-control">
+                                <p *ngIf="formAlumno.get('nombre').hasError('required') && formAlumno.get('nombre').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="apellidos">Apellidos:</label>
+                                <input type="text" formControlName="apellidos" class="form-control">
+                                <p *ngIf="formAlumno.get('apellidos').hasError('required') && formAlumno.get('apellidos').touched">
+                                    Campo requerido
+                                </p>
+                            </div>                          
+                            
+                        </div>
+
+                        <div class="col-md-4">    
+                            <div class="form-group">
+                                <label for="direccion">Dirección:</label>
+                                <input type="text" formControlName="direccion" class="form-control">
+                            </div>                        
+                            <div class="form-group">
+                                <label for="telefono">Telefono</label>
+                                <input type="text" formControlName="telefono" class="form-control">
+                                <div>                                    
+                                    <p *ngIf="formAlumno.get('telefono').hasError('pattern') && (formAlumno.get('telefono').touched || formAlumno.get('telefono').dirty)">
+                                        Ingrese número de 7 a 9 cifras
+                                    </p>
+                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="genero">Género:</label>
+                                <select formControlName="genero" class="form-control">
+                                    <option value="M" selected=true>M</option>
+                                    <option value="F">F</option>
+                                    <option value="O">Otros</option>
+                                </select>
+                                <p *ngIf="formAlumno.get('genero').hasError('required') && formAlumno.get('genero').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <input *ngIf="estadoGuardar" type="submit" class="btn btn-primary form-control mt-4" value="Guardar">
+                                <input *ngIf="estadoEditar" type="submit" class="btn btn-primary form-control mt-4" value="Editar">
+                            </div>                     
+
+                        </div>
+
+                        <div class="col-md-4">   
+                            <div class="form-group">
+                                <label for="fecha_nac">Fecha de Nacimiento:</label>
+                                <input type="date" formControlName="fecha_nac" class="form-control">
+                                <p *ngIf="formAlumno.get('fecha_nac').hasError('required') && formAlumno.get('fecha_nac').touched">
+                                    Campo requerido
+                                </p>
+                            </div>                
+                            <div class="form-group">
+                                <label for="pass">Contraseña:</label>
+                                <input type="password" formControlName="pass" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="estado">Estado:</label>
+                                <select formControlName="estado" class="form-control">
+                                    <option value="Activo">Activo</option>
+                                    <option value="Cesante">Cesante</option>
+                                    <option value="Suspendido">Suspendido</option>
+                                </select>
+                                <p *ngIf="formAlumno.get('estado').hasError('required') && formAlumno.get('estado').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label></label>
+                                <button (click)="Limpiar()" type="button" class="btn btn-danger form-control mt-4">Limpiar</button>
+                            </div>
+                                               
+                        </div>                        
+
+                    </div>
+                </form>
+            </div> 
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mt-3">
+                        <app-emergente-apoderado [visible]="modalEstado" (cerrar)="modalEstado = $event"></app-emergente-apoderado>
+                        <label for="">Asignar apoderado:</label>
+                        <input type="text" class="form-control" [formControl]="formApoderado" readonly>
+                        <input type="hidden" class="form-control" [formControl]="formIdapoderado">                             
+                        <p *ngIf="formIdapoderado.hasError('required') && (formIdapoderado.touched || formIdapoderado.dirty)">
+                            {{mensaje_campo}}
+                        </p>                                                                
+                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <a style="cursor: pointer; margin-top: 40px;" (click)="mostrarModal()" class="btn btn-primary form-control ">Elejir apoderado</a>
+                </div>
+                <div class="col-md-4">
+
+                </div>
+            </div>             
+            
+            <div class="row mt-2" style="overflow: scroll;">
+                <div class="col-ms">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="5">
+                                    <h4>Lista de alumnos</h4>
+                                </th>
+                                <th scope="col" colspan="2">
+                                    <input type="search" [formControl]="formBuscar" class="form-control" placeholder="Ingrese Nombre o DNI">
+                                </th>
+                                <th scope="col" colspan="1">
+                                    <button (click)="Buscar()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">Imagen</th>
+                                <th scope="col">DNI</th>
+                                <th scope="col">Nombres</th>                               
+                                <th scope="col">Género</th>
+                                <th scope="col">F/Nacimiento</th>                                              
+                                <th scope="col">Estado</th>
+                                <th scope="col">Apoderado</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let alumno of alumnos" class="text-center">
+                                <td >
+                                    <img (click)="abrirModalFoto(alumno)" style="cursor: pointer;" *ngIf="alumno?.foto" width="60px" height="60px"
+                                        src="{{urlBackend}}/archivos/fotos/{{alumno.foto}}" alt="{{alumno.foto}}"
+                                        class="img-thumbnail rounded"
+                                    >
+                                    <img (click)="abrirModalFoto(alumno)" style="cursor: pointer;" *ngIf="!alumno?.foto" width="60px" height="60px"
+                                        src="{{urlBackend}}/imagen/fotologo.jpg" alt="sin foto"
+                                        class="img-thumbnail rounded"
+                                    >
+                                    
+                                </td>
+                                <td>{{alumno.dni}}</td>
+                                <td>{{alumno.nombre}}, {{alumno.apellidos}}</td>                               
+                                <td>{{alumno.genero}}</td>
+                                <td>{{alumno.fecha_nac | date : "dd/MM/yyyy" }}</td>                                                      
+                               
+                                <td>{{alumno.estado}}</td>
+                                <td>{{alumno.apoderado.nombre}}, {{alumno.apoderado.apellidos}}</td>
+                                <td>
+                                    <a (click)="enviar(alumno)" style="cursor: pointer;">
+                                        <img style="width: 20px; height: 20;" src="./assets/img/seleccionar.png">
+                                    </a>
+                                    <a (click)="eliminar(alumno)" style="cursor: pointer; margin-left: 8px;">
+                                        <img style="width: 18px; height: 18px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtenerAlumno(alumno)" style="cursor: pointer; margin-left: 8px;">
+                                        <img style="width: 18px; height: 18px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                        
+                    </table>
+                    <span *ngIf="mensaje" style="font-size: 20px; color: red;">{{mensaje}}</span>
+                </div>                
+
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,171 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                            
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Lista de Clases virtuales Realizadas
+                                    </h5>
+                                </a>
+
+                            </li>
+
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>
+                            <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                                <h3 style="color: black;">
+                                    {{ususervicio.usuario.empleado.nombre}},{{ususervicio.usuario.empleado.apellidos}}
+                                </h3>
+                            </li>
+                            <li class="nav-item" style="text-align: right;">
+                                <a (click)="irAperfil()" class="btn btn-outline-success"
+                                    style="margin-left: 5px; cursor:pointer;" aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li>
+                        </ul>
+
+                    
+                </div>
+            </nav>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <p>Se mostrará la relación de clases realizadas por los docentes:</p>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" [formControl]="ffecha" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <button (click)="buscarClases()" class="btn btn-primary form-control">Ver clases del día</button>
+                </div>
+            </div>           
+            <br>
+            <div class="row mt-2"  style="overflow: scroll;">
+                <mat-accordion class="example-headers-align">
+                    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle
+                        *ngFor="let clase of clases">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Clase : -- {{clase.tema}}
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Descripción: -- {{clase.descripcion}}
+
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <mat-list role="list">
+                                    <ul class="list-group text-dark">                                        
+                                        <li class="list-group-item">
+                                            DOCENTE: {{clase.dce.empleado.nombre}}, {{clase.dce.empleado.apellidos}}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-sm">
+                                                    GRADO: {{clase.dce.grado.alias_grado}}
+                                                </div>
+                                                <div class="col-sm">
+                                                    SECCIÓN: {{clase.dce.seccion.nombre_seccion}}
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            CURSO: {{clase.dce.curso.nombre}}
+                                        </li>                                        
+                                    </ul>
+                                </mat-list>
+                                <mat-list role="list">
+                                    <mat-list-item *ngIf="clase?.documento1" role="listitem">
+                                        <a href="{{urlBackend}}/archivos/mostrar/{{clase.documento1}}">Descargar
+                                            material</a>
+                                    </mat-list-item>
+                                    <mat-list-item *ngIf="clase?.documento2" role="listitem">
+                                        <a href="{{urlBackend}}/archivos/mostrar/{{clase.documento2}}">Descargar
+                                            Material</a>
+                                    </mat-list-item>
+                                    <mat-list-item *ngIf="clase?.documento3" role="listitem">
+                                        <a href="{{urlBackend}}/archivos/mostrar/{{clase.documento3}}">Descargar
+                                            Material</a>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">Fecha : {{clase.fecha | date : 'dd/MM/yyyy'}}
+                                    </mat-list-item>
+
+                                    <mat-list-item role="listitem">
+                                        Link:<a *ngIf="clase?.link_url" href="{{clase.link_url}}">Meet</a>
+                                        <a *ngIf="!clase?.link_url">Sin link</a>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        Link:<a *ngIf="clase?.link_clase" href="{{clase.link_clase}}">Video conferencia
+                                            grabada</a>
+                                        <a *ngIf="!clase?.link_clase">Sin link</a>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem" *ngIf="verificarCurso(clase)">
+                                        <p>Asistencia: </p>
+                                        <a (click)="verAsistencias(clase)" class="btn btn-primary">
+                                            Ver ficha de asistencia
+                                        </a>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                            <div class="col-md-8">
+                                <mat-list role="list" class="mt-2" *ngFor="let actividad of clase.actividades">
+                                    <mat-list-item role="listitem">
+                                        <p style="color: blue;">Actividad: -- </p>
+                                        <p>{{actividad.nombre}}</p>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem" *ngIf="actividad?.archivo">
+                                        <p style="color: blue;">Archivo adjunto: -- </p>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem" *ngIf="actividad?.archivo">
+                                        <p>{{actividad.archivo}}</p>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem" *ngIf="actividad?.archivo">
+                                        <a href="{{urlBackend}}/archivos/mostrardoc/{{actividad.archivo}}">Descargar</a>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        <p style="color: blue;">Descripción: -- </p>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        <p>{{actividad.descripcion}}</p>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        <p style="color: blue;">Disponibilidad de entrega: -- de: </p>
+                                        <p>{{actividad.fecha_publicacion}}</p>
+                                        <p style="color: blue;">-- Hasta: -- </p>
+                                        <p>{{actividad.fecha_entrega}}
+                                        </p>
+                                    </mat-list-item>                                    
+                                </mat-list>
+
+                            </div>
+                        </div>
+                        <mat-action-row>
+
+                        </mat-action-row>
+                    </mat-expansion-panel>
+
+                </mat-accordion>
+            </div>
+
+            <span *ngIf="mensajeClase">{{mensajeClase}}</span>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,55 @@
+<div class="stilo-modal" *ngIf="visible">
+    <div class="modal" tabindex="-1" style="display: block;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button (click)="cerrarModal()" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <ul *ngIf="cronograma" class="list-group text-dark">
+                                    <li class="list-group-item active">
+                                        <h5>Administrar archivo para las noticias</h5>
+                                    </li>
+                                    <li class="list-group-item">{{cronograma.fecha}}</li>
+                                    
+                                </ul>
+                                <div class="input-group mt-4">
+                                    <input (change)="capturarArchivo($event)" type="file" class="form-control"
+                                        id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
+                                        aria-label="Upload">
+                                    <button (click)="guardar()" [disabled]="!estadoBoton"
+                                        class="btn btn-outline-secondary" type="button"
+                                        id="inputGroupFileAddon04">Guardar</button>
+                                </div>
+                                <div *ngIf="progreso > 0" class="progress mt-4">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar"
+                                        [ngStyle]="{width:progreso+'%'}" attr.aria-valuenow="{{progreso}}"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                        {{progreso}}%
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row mt-4"> 
+                            <div class="col-sm">
+                                <p *ngIf="cronograma?.archivo">{{cronograma.archivo}}</p>
+                                <a *ngIf="cronograma?.archivo"
+                                    href="{{urlBackend}}/archivos/crmostrar/{{cronograma.archivo}}">
+                                    Descargar
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,202 @@
+<p #inicio></p>
+<app-especialidad></app-especialidad>
+<div class="container mt-1">     
+    <div class="card">
+        <div class="card-header">
+            <h5 style="font-size: 20px;">Formulario para administrar Personal</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <form [formGroup]="formEmpleado" (ngSubmit)="save($event)">
+                    <input type="hidden" formControlName="idempleado">                                       
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="dni">DNI:</label>
+                                <input type="text" formControlName="dni" class="form-control">                                
+                                <p *ngIf="formEmpleado.get('dni').touched && formEmpleado.get('dni').hasError('required')">
+                                    Campo requerido                                                                       
+                                </p>
+                                <p *ngIf="(formEmpleado.get('dni').touched || formEmpleado.get('dni').dirty) && formEmpleado.get('dni').hasError('pattern')">
+                                    Campo no válido                                     
+                                </p> 
+                                   
+                            </div>
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" formControlName="nombre" class="form-control">
+                                <p *ngIf="formEmpleado.get('nombre').hasError('required') && formEmpleado.get('nombre').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="apellidos">Apellidos:</label>
+                                <input type="text" formControlName="apellidos" class="form-control">
+                                <p *ngIf="formEmpleado.get('apellidos').hasError('required') && formEmpleado.get('apellidos').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+                                                  
+                            
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="genero">Género:</label>
+                                <select formControlName="genero" class="form-control">
+                                    <option value="M">M</option>
+                                    <option value="F">F</option>
+                                    <option value="O">Otros</option>
+                                </select>
+                                <p *ngIf="formEmpleado.get('genero').hasError('required') && formEmpleado.get('genero').touched">
+                                    Campo requerido
+                                </p>
+                            </div>      
+                            <div class="form-group">
+                                <label for="fecha_nac">Fecha de Nacimiento:</label>
+                                <input type="date" formControlName="fecha_nac" class="form-control">
+                                <p *ngIf="formEmpleado.get('fecha_nac').hasError('required') && formEmpleado.get('fecha_nac').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="estado_civil">Estado civil:</label>
+                                <input type="text" formControlName="estado_civil" class="form-control">
+                                <p *ngIf="formEmpleado.get('estado_civil').hasError('required') && formEmpleado.get('estado_civil').touched">
+                                    Campo requerido
+                                </p>
+                            </div> 
+                                                                            
+                            
+                        </div>
+
+                        <div class="col-md-4">    
+                            <div class="form-group">
+                                <label for="direccion">Dirección:</label>
+                                <input type="text" formControlName="direccion" class="form-control">
+                            </div>                            
+                            <div class="form-group">
+                                <label for="telefono">Telefono</label>
+                                <input type="text" formControlName="telefono" class="form-control">
+                                <div>                                    
+                                    <p *ngIf="formEmpleado.get('telefono').hasError('pattern') && (formEmpleado.get('telefono').touched || formEmpleado.get('telefono').dirty)">
+                                        Ingrese número de 7 a 9 cifras
+                                    </p>
+                                
+                                </div>
+                            </div>                            
+
+                            <div class="form-group">
+                                <label for="estado">Estado:</label>
+                                <select formControlName="estado" class="form-control">
+                                    <option value="Activo">Activo</option>
+                                    <option value="Cesante">Cesante</option>
+                                    <option value="Suspendido">Suspendido</option>
+                                </select>
+                                <p *ngIf="formEmpleado.get('estado').hasError('required') && formEmpleado.get('estado').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <input *ngIf="estadoGuardar" type="submit" class="btn btn-primary form-control mt-4" value="Guardar">
+                                <input *ngIf="estadoEditar" type="submit" class="btn btn-primary form-control mt-4" value="Editar">
+                            </div>                           
+                                               
+                        </div>                        
+
+                    </div>
+                </form>
+            </div> 
+            <div class="row mt-1">
+                <div class="col-md-4">
+                    <div class="form-group">                        
+                        
+                        <input type="text" class="form-control" [formControl]="formNombreEspe" readonly placeholder="Escoger Especialidad">
+                        <input type="hidden" class="form-control" [formControl]="formIdespecialidad">                             
+                        <p *ngIf="formIdespecialidad.hasError('required') && formIdespecialidad.touched">
+                            Campo requerido
+                        </p>                                                                
+                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <a (click)="navegar(inicio)" style="cursor: pointer;" class="btn btn-primary form-control mt-1 ">Elejir especialidad</a>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">                               
+                        <button (click)="limpiar()" type="button" class="btn btn-danger form-control mt-1">Limpiar</button>
+                    </div>
+                </div>
+            </div>
+            <app-empleado-foto *ngIf="empleadoSeleccionado" [empleado]="empleadoSeleccionado" [visibleModal]="estadoModal" (cerrar)="estadoModal = $event"></app-empleado-foto>             
+            
+            <div class="row mt-4" style="overflow: scroll;">
+                <div class="col-ms">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="4">
+                                    <h4>Lista del personal</h4>
+                                </th>
+                                <th scope="col" colspan="3">
+                                    <input type="search" [formControl]="formBuscarPersonal" class="form-control" placeholder="Ingrese Nombre o DNI">
+                                </th>
+                                <th scope="col" colspan="1">
+                                    <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">Foto/CV</th>
+                                <th scope="col">DNI</th>
+                                <th scope="col">Nombres</th>                                 
+                                <th scope="col">F/Nacimiento</th>                    
+                                <th scope="col">Teléfono</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Especialidad</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let empleado of empleados" class="text-center">
+                                <td>
+                                    <img (click)="abrirModal(empleado)" style="cursor: pointer;" *ngIf="empleado?.foto" width="60px" height="60px"
+                                        src="{{urlBackend}}/archivos/foto/{{empleado.foto}}" alt="{{empleado.foto}}"
+                                        class="img-thumbnail rounded"
+                                    >
+                                    <img (click)="abrirModal(empleado)" style="cursor: pointer;" *ngIf="!empleado?.foto" width="60px" height="60px"
+                                        src="{{urlBackend}}/imagen/fotologo.jpg" alt="sin foto"
+                                        class="img-thumbnail rounded"
+                                    >
+                                </td>
+                                <td>{{empleado.dni}}</td>
+                                <td>{{empleado.nombre}}, {{empleado.apellidos}}</td>
+                                <td>{{empleado.fecha_nac | date : "dd/MM/yyyy" }}</td>                               
+                                <td>{{empleado.telefono }}</td>
+                                <td>{{empleado.estado}}</td>
+                                <td>{{empleado.especialidad.nombre}}</td>
+                                <td>
+                                    <a (click)="eliminar(empleado)" style="cursor: pointer;">
+                                        <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtener(empleado)"  style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                        
+                    </table>
+                    <p *ngIf="mensaje">
+                        {{mensaje}}
+                    </p>
+                </div>                
+
+            </div>
+        </div>
+    </div>
+
+</div>

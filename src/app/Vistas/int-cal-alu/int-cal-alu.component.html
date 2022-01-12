@@ -1,0 +1,248 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+        <div class="container-fluid">
+
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <li class="nav-item">
+              <a class="nav-link active" style="margin-left: 5px;" aria-current="page">
+                <h5 style="color: black; font-size: 20px;">
+                  Calificaciones
+                </h5>
+              </a>
+
+            </li>
+          </ul>
+          <ul class="navbar-nav navbar-rigth">
+            <li>
+              <svg class="bi me-2" width="30" height="30">
+                <use xlink:href="#people-circle" />
+              </svg>
+            </li>
+            <li class="mt-2" *ngIf="usualumno.isAuthenticated()">
+              <h3 style="color: black;">
+                {{usualumno.ualumno.alumno.nombre}}, {{usualumno.ualumno.alumno.apellidos}}
+              </h3>
+            </li>
+            <li class="nav-item" style="text-align: right;">
+              <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer; "
+                aria-current="page">
+                <p style="color: black; font-size: 15px;">
+                  Ir a Perfil
+                </p>
+              </a>
+            </li>
+
+          </ul>
+
+
+        </div>
+      </nav>
+    </div>
+    <div class="container mt-2">
+
+      <div class="row mt-3" style="margin-left: 1px; margin-right: 1px;
+      overflow: scroll;">
+        <table style="max-width: 100%;">
+          <tr class="text-center">
+            <th colspan="2">
+              <div *ngIf="estadoDescarga">
+                <button [disabled]="!estadoDescarga" (click)="descargarLibreta()"
+                  class="btn btn-success">Descargar</button>
+                <a href="{{urlBackend}}/descargas/reporte/libreta/{{detallealumno.iddetalle_alumno}}"
+                  style="margin-left: 5px;" class="btn btn-primary">Descargar</a>
+              </div>
+            </th>
+            <th colspan="17">
+              <p *ngIf="detallealumno?.periodo">LIBRETA DE NOTAS PERIODO -- {{detallealumno.periodo}} </p>
+            </th>
+          </tr>
+          <tr *ngIf="detallealumno" class="text-center">
+            <th colspan="2">
+              <p>ESTUDIANTE:</p>
+            </th>
+            <th colspan="6">
+              <p *ngIf="detallealumno?.alumno"> {{detallealumno.alumno.nombre}},{{detallealumno.alumno.apellidos}}</p>
+            </th>
+            <th colspan="3">
+              <p>GRADO:</p>
+            </th>
+            <th colspan="1">
+              <p *ngIf="detallealumno?.grado">{{detallealumno.grado.alias_grado}}</p>
+            </th>
+            <th colspan="3">
+              <p>SECCIÓN:</p>
+            </th>
+            <th colspan="1">
+              <p *ngIf="detallealumno?.seccion">{{detallealumno.seccion.nombre_seccion}}</p>
+            </th>
+            <th colspan="1">
+              <p></p>
+            </th>
+            <th colspan="2">
+              <p></p>
+            </th>
+          </tr>
+
+          <tr class="text-center">
+            <th width="15px" rowspan="3">
+              <p>N°</p>
+            </th>
+            <th rowspan="3">
+              <p>ÁREAS</p>
+            </th>
+            <th colspan="17">
+              <p>BIMESTRES</p>
+            </th>
+          </tr>
+
+          <tr class="text-center">
+            <th colspan="4">
+              <p>BIMESTRE I</p>
+            </th>
+            <th colspan="4">
+              <p>BIMESTRE II</p>
+            </th>
+            <th colspan="4">
+              <p>BIMESTRE III</p>
+            </th>
+            <th colspan="4">
+              <p>BIMESTRE IV</p>
+            </th>
+            <th width="20px" rowspan="2">
+              <p class="vertical-text">Nivel de Logro anual</p>
+            </th>
+          </tr>
+          <tr class="text-center">
+            <th>
+              <p>C1</p>
+            </th>
+            <th>
+              <p>C2</p>
+            </th>
+            <th>
+              <p>C3</p>
+            </th>
+            <th>
+              <p>C4</p>
+            </th>
+
+            <th>
+              <p>C1</p>
+            </th>
+            <th>
+              <p>C2</p>
+            </th>
+            <th>
+              <p>C3</p>
+            </th>
+            <th>
+              <p>C4</p>
+            </th>
+
+            <th>
+              <p>C1</p>
+            </th>
+            <th>
+              <p>C2</p>
+            </th>
+            <th>
+              <p>C3</p>
+            </th>
+            <th>
+              <p>C4</p>
+            </th>
+
+            <th>
+              <p>C1</p>
+            </th>
+            <th>
+              <p>C2</p>
+            </th>
+            <th>
+              <p>C3</p>
+            </th>
+            <th>
+              <p>C4</p>
+            </th>
+
+          </tr>
+
+          <tr *ngFor="let libreta of libretas">
+
+            <td style="width: 13px;">
+              <p>{{libreta.indice}}</p>
+            </td>
+
+            <td style="width: 300px;">
+              <p>{{libreta.nombre_curso}}</p>
+            </td>
+
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_I_bim_I}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_II_bim_I}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_III_bim_I}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_IV_bim_I}}</p>
+            </td>
+
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_I_bim_II}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_II_bim_II}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_III_bim_II}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_IV_bim_II}}</p>
+            </td>
+
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_I_bim_III}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_II_bim_III}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_III_bim_III}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_IV_bim_III}}</p>
+            </td>
+
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_I_bim_IV}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_II_bim_IV}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_III_bim_IV}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.alias_competencia_IV_bim_IV}}</p>
+            </td>
+            <td style="width: 13px;">
+              <p>{{libreta.logroanual}}</p>
+            </td>
+
+          </tr>
+
+        </table>
+
+        <span *ngIf="mensajeTabla">{{mensajeTabla}}</span>
+
+      </div>
+
+    </div>
+  </div>
+</div>

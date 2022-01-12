@@ -1,0 +1,132 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">            
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                   
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            
+                            
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Formulario para administrar bimestre
+                                    </h5>
+                                </a>
+                                
+                            </li>                   
+                
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>
+                            <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                                <h4 style="color: black;">
+                                    {{ususervicio.usuario.empleado.nombre}}, {{ususervicio.usuario.empleado.apellidos}}
+                                </h4>
+                            </li>
+                            <li class="nav-item" style="text-align: right;">
+                                <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li>
+                        </ul>
+                         
+                 
+                </div>
+            </nav>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4"> 
+                    <form [formGroup]="fbimestre" (ngSubmit)="enviar($event)">
+                        <input type="hidden" formControlName="fidbimestre">
+                        <div class="form-group">
+                            <label for="nombre">Selecione bimestre</label>
+                            <select class="form-control" formControlName="fnombre">
+                                <option selected value="I">I</option>
+                                <option value="II">II</option>
+                                <option value="III">III</option>
+                                <option value="IV">IV</option>                                
+                            </select>
+                            <p *ngIf="fbimestre.get('fnombre').hasError('required') && fbimestre.get('fnombre').touched">
+                                Campo requerido
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Descripcion:</label>
+                            <textarea rows="3" formControlName="fdescripcion" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Ingrese Fecha Inicio</label>
+                            <input type="date" formControlName="finicio" class="form-control">
+                            <p *ngIf="fbimestre.get('finicio').hasError('required') && fbimestre.get('finicio').touched">
+                                Campo requerido
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Ingrese Fecha Fin</label>
+                            <input type="date" formControlName="ffin" class="form-control">
+                            <p *ngIf="fbimestre.get('ffin').hasError('required') && fbimestre.get('ffin').touched">
+                                Campo requerido
+                            </p>
+                        </div>
+                        <div class="form-group mt-3">                    
+                            <input *ngIf="botonGuardar" type="submit" value="Guardar" class="btn btn-primary margen">
+                            <input *ngIf="botonEditar" type="submit" value="Editar" class="btn btn-primary margen">
+                            <button (click)="cancelar()" class="btn btn-danger margen" type="button">Cancelar</button>
+                        </div>
+                        <div class="form-group">
+                            
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-8" style="overflow: scroll;">
+                    <h5>Lista de bimestre</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr bgcolor="skyblue">
+                                <th scope="col">ID</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Fecha Inicio</th>
+                                <th scope="col">Fecha Fin</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let bimestre of bimestres">
+                                <td>{{bimestre.idbimestre}}</td>
+                                <td>{{bimestre.nombre}}</td>
+                                <td>{{bimestre.descripcion}}</td>
+                                <td>{{bimestre.fecha_inicio | date : 'dd/MM/yyyy'}}</td>
+                                <td>{{bimestre.fecha_fin | date : 'dd/MM/yyyy'}}</td>
+                                <td>
+                                    <a (click)="eliminar(bimestre)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtener(bimestre)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p *ngIf="mensaje">
+                        {{mensaje}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>   
+    
+</div>
+<app-periodo-calificacion></app-periodo-calificacion>
+<app-tutor></app-tutor>

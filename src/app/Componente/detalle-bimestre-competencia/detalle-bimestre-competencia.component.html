@@ -1,0 +1,330 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">     
+                        
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>
+                            <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                                <h3 style="color: black;">
+                                    {{ususervicio.usuario.empleado.nombre}}, {{ususervicio.usuario.empleado.apellidos}}
+                                </h3>
+                            </li>
+                    </ul>
+                            <ul class="navbar-nav navbar-rigth">
+                            <li class="nav-item">
+                                <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li> 
+                        </ul>
+                 </div>
+            </nav>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <h5 style="font-size: 20px;">INFORME DE PROGRESO DE LAS COMPETENCIAS DEL ESTUDIANTE: {{fechahoy | date : 'dd/MM/yyyy'}}</h5>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Ingrese alumno:</label>
+                        <input type="text" [formControl]="falumno" class="form-control"
+                            placeholder="Ingrese Nombre o DNI">
+                        <span *ngIf="mensajeAlumno">{{mensajeAlumno}}</span>
+                        <span *ngIf="mensajeBuscar">{{mensajeBuscar}}</span>
+                    </div>
+                    <!--<div class="form-group mt-3">
+                        <input type="date" [formControl]="ffecha" class="form-control">
+                        <span *ngIf="mensajeFecha">{{mensajeFecha}}</span>
+                    </div>-->
+
+                </div>
+                <div class="col-md-2 mt-3">
+                    <div class="form-group mt-2">
+                        <button (click)="buscarAlumno()" class="btn btn-success">Buscar Alumno</button>
+                        
+                    </div>
+                    <div class="form-group mt-3">
+                        <button (click)="validarAlumno()" class="btn btn-primary">Validar Alumno</button>
+                        
+                    </div>
+                </div>
+                <div class="col-md-6" >
+                    <div class="form-group mt-4">
+                        <select class="form-control" [formControl]="fdetallealumno">
+                            <option *ngFor="let detallealum of detallealums" [ngValue]="detallealum">
+                                {{detallealum.alumno.nombre}},{{detallealum.alumno.apellidos}} ----Grado:
+                                {{detallealum.grado.nombre_grado}} ----Sección: {{detallealum.seccion.nombre_seccion}}
+                            </option>
+                        </select>
+                        <span *ngIf="mensajeda">{{mensajeda}}</span>
+                        <span *ngIf="mensajeValidar">{{mensajeValidar}}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mt-3 mb-1">
+                <table *ngIf="alumnoselect" style="height: 350px;">
+                    <tr>
+                        <td>
+                            <button (click)="descargar()" class="btn btn-success">Descargar</button>
+                            <a href="{{urlBackend}}/descargas/generar/reporte/aprovechamiento/{{alumnoselect.iddetalle_alumno}}" style="margin-left: 5px;" class="btn btn-primary">Descargar</a>
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td rowspan="7" colspan="2">
+                            <img width="200px" height="375px" src="./assets/img/escarapela.jpg">
+                        </td>
+                        <td>
+                            <table style="border-collapse: collapse; width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <p>DRE:</p>
+                                    </td>
+                                    <td colspan="2">
+                                        <P>LIMA PROVINCIAS</P>
+                                    </td>
+                                    <td colspan="2" rowspan="2">
+                                        <p>UGEL:</p>
+                                    </td>
+                                    <td rowspan="2">
+                                        <P>N° 16 BARRANCA</P>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <p>NIVEL:</p>
+                                    </td>
+                                    <td colspan="2">
+                                        <p>SECUNDARIA</p>
+                                    </td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <p>INSTITUCIÓN EDUCATIVA</p>
+                                    </td>
+                                    <td colspan="2">
+                                        <p>LIBERTADOR SIMÓN BOLIVAR</p>
+                                    </td>
+                                    <td colspan="2">
+                                        <p>CÓDIGO MODULAR</p>
+                                    </td>
+                                    <td>
+                                        <p>0286450</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <p>GRADO:</p>
+                                    </td>
+                                    <td colspan="2">
+                                        <p>{{alumnoselect.grado.nombre_grado}}</p>
+                                    </td>
+                                    <td colspan="2">
+                                        <p>SECCIÓN:</p>
+                                    </td>
+                                    <td>
+                                        <p>{{alumnoselect.seccion.nombre_seccion}}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <p>DNI DEL ESTUDIANTE</p>
+                                    </td>
+                                    <td colspan="5">
+                                        <P>{{alumnoselect.alumno.dni}}</P>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <p>APELLIDOS Y NOMBRES DEL ESTUDIANTE:</p>
+                                    </td>
+                                    <td colspan="5">
+                                        <P>{{alumnoselect.alumno.nombre}}, {{alumnoselect.alumno.apellidos}}</P>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <p>APELLIDOS Y NOMBRES DEL TUTOR(A)</p>
+                                    </td>
+                                    <td colspan="5">
+                                        <P *ngIf="tutor">{{tutor.empleado.nombre}}, {{tutor.empleado.apellidos}}</P>
+                                        <p *ngIf="mensajeTutor">{{mensajeTutor}}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td rowspan="7" colspan="2">
+                            <img width="200px" height="375px" src="./assets/img/simon.png">
+                        </td>
+                    </tr>
+                </table>
+            </div>            
+
+            <div class="row mt-3">                               
+                <table>                                        
+                    <tr bgcolor="skyblue">
+                        <td width="110px">
+                            <p >Área curricular</p>
+                        </td>                        
+                        <td style="border-collapse: collapse;">
+                            <table style="width:100%; border-collapse: collapse;">
+                                <tr>
+                                    <td rowspan="2" width="230px">
+                                        <p class="">Competencias</p>
+                                    </td>
+                                    <td width="120px"colspan="2">
+                                        <p>I Bimestre</p>
+                                    </td>
+                                    <td width="120px" colspan="2">
+                                        <p>II Bimestre</p>
+                                    </td>
+                                    <td width="120px" colspan="2">
+                                        <p>III Bimestre</p>
+                                    </td>
+                                    <td width="120px" colspan="2">
+                                        <p>IV Bimestre</p>
+                                    </td>
+                                    <td width="20px" rowspan="2">
+                                        <p class="vertical-text">Nivel de logro anual</p>
+                                    </td>
+                                </tr>
+                                <tr>                                    
+                                    <td width="15px">
+                                        <p  class="vertical-text">Nivel de logro</p>
+                                    </td>
+                                    <td width="100px">
+                                        <p>Descripción</p>
+                                    </td>
+                                    <td width="15px">
+                                        <p class="vertical-text">Nivel de logro</p>
+                                    </td>
+                                    <td width="100px">
+                                        <p>Descripción</p>
+                                    </td>
+                                    <td width="15px">
+                                        <p class="vertical-text">Nivel de logro</p>
+                                    </td>
+                                    <td width="100px">
+                                        <p>Descripción</p>
+                                    </td>
+                                    <td width="15px">
+                                        <p class="vertical-text">Nivel de logro</p>
+                                    </td>
+                                    <td width="100px">
+                                        <p>Descripción</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>             
+
+                    <tr *ngFor="let curso of mcursos">
+                        <td width="110px">                          
+                            <p>{{curso.nombre}}</p>                                  
+                           
+                        </td>
+                        <td>
+                            <table style="width:100%; border-collapse: collapse;">                              
+                                
+                                <tr *ngFor="let comnota of curso.comnotas">
+                                    <td width="200px">
+                                        <p class="">{{comnota.nombre}}</p>
+                                    </td>
+                                    <td width="20px">
+                                        <p class="">{{comnota.aliasI}}</p>
+                                    </td>
+                                    <td width="100px">
+                                        <p class="">{{comnota.descripcionI}}</p>
+                                    </td>
+                                    <td width="20px">
+                                        <p class="">{{comnota.aliasII}}</p>
+                                    </td>
+                                    <td width="100px">
+                                        <p class="">{{comnota.descripcionII}}</p>
+                                    </td>
+                                    <td width="20px">
+                                        <p class="">{{comnota.aliasIII}}</p>
+                                    </td>
+                                    <td width="100px">
+                                        <p class="">{{comnota.descripcionIII}}</p>
+                                    </td>
+                                    <td width="20px">
+                                        <p class="">{{comnota.aliasIV}}</p>
+                                    </td>
+                                    <td width="100px">
+                                        <p class="">{{comnota.descripcionIV}}</p>
+                                    </td>
+                                    <td width="20px">
+                                        <p class="">{{comnota.logroanual}}</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+
+            <div class="row mt-3">
+                <table style="width: 600px;">
+                    <tbody>
+                        <tr class="text-center">
+                            <td rowspan="2">
+                                <p>Bimestres</p>
+                            </td>
+                            <td colspan="2">Inasistencias</td>
+                            <td colspan="2">Tardanzas</td>
+                            <td rowspan="2">Asistencias</td>
+                            <td rowspan="2">Total</td>
+                        </tr>
+                        <tr class="text-center">
+                            
+                            <td>
+                                <p>Justificadas</p>
+                            </td>
+
+                            <td>
+                                <p>Injustificadas</p>
+                            </td>
+                            <td>
+                                <p>Justificadas</p>
+                            </td>
+
+                            <td>
+                                <p>Injustificadas</p>
+                            </td>
+
+
+                        </tr>
+                        <tr *ngFor="let asistencia of masistencias" class="text-center">
+                            <td>{{asistencia.bimestre}}</td>
+                            <td>{{asistencia.fj}}</td>
+                            <td>{{asistencia.fi}}</td>
+                            <td>{{asistencia.tj}}</td>
+                            <td>{{asistencia.ti}}</td>
+                            <td>{{asistencia.asis}}</td>
+                            <td>{{asistencia.total}}</td>
+
+                        </tr>
+                        
+                    </tbody>
+                </table>
+                <span *ngIf="mensajeAsistencias">{{mensajeAsistencias}}</span>
+            </div>
+
+        </div>
+    </div>
+</div>

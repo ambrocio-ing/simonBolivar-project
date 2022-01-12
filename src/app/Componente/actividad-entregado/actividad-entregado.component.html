@@ -1,0 +1,155 @@
+<!--<app-actividad-archivo *ngIf="actividadSeleccionado"  [actividad]="actividadSeleccionado" [visible]="estadoModal" (cerrar)="estadoModal = $event"></app-actividad-archivo> -->
+<app-archivo-entregado *ngIf="actividadSeleccionado" [actividadEntregado]="actividadSeleccionado"
+    [visible]="estadoModal" (cerrar)="estadoModal = $event"></app-archivo-entregado>
+<div class="row">
+    
+</div>
+<div class="container ">
+    <div class="card">
+        <div class="card-header">
+
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                            
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Entrega de actividad
+                                    </h5>
+                                </a>
+
+                            </li>
+
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">         
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>                   
+                            <li *ngIf="usualumno.isAuthenticated()" class="mt-2">
+                                <h5 style="color: black; font-size: 15px;">
+                                    {{usualumno.ualumno.alumno.nombre}}, {{usualumno.ualumno.alumno.apellidos}}
+                                </h5>
+                            </li>
+                            <li class="nav-item">
+                                <a (click)="irAclase()" class="btn btn-outline-success"
+                                    style="margin-left: 5px; cursor:pointer;" aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a clases
+                                    </h5>
+                                </a>
+                            </li>
+                        </ul>
+
+                    
+                </div>
+            </nav>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm">
+                    <ul *ngIf="dce" class="list-group text-dark">
+                        <li *ngIf="dce?.curso" class="list-group-item">Curso: {{dce.curso.nombre}}</li>
+                    </ul>
+                </div>
+                <div class="col-sm">
+                    <ul *ngIf="actividad" class="list-group text-dark">
+                        <li *ngIf="actividad?.nombre" class="list-group-item">Actividad: {{actividad.nombre}}, Fecha
+                            límite para entregar: {{actividad.fecha_entrega | date : 'dd-MM-yyyy'}}</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <form [formGroup]="formActividadEntregado" (ngSubmit)="save($event)">
+                        <input type="hidden" formControlName="fidactividad_entregado">
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="fdescripcion">Descripción:</label>
+                                <textarea rows="3" formControlName="fdescripcion" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ffecha_entrega">Fecha de entrega</label>
+                                <input type="date" formControlName="ffecha_entrega" class="form-control" readonly>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <input *ngIf="botonGuardar" type="submit" class="btn btn-primary form-control mt-2"
+                                    value="Guardar">
+                                <input *ngIf="botonEditar" type="submit" class="btn btn-primary form-control mt-2"
+                                    value="Editar">
+
+                            </div>
+                            <div class="form-group mt-2">
+                                <button (click)="limpiar()" type="button"
+                                    class="btn btn-danger form-control mt-2">Limpiar
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="entregado" style="overflow: scroll;" >
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="2">
+                                    <h4>Actividades Entregados</h4>
+                                </th>
+                                <th scope="col" colspan="2">
+                                    <input type="search" [formControl]="formBuscar" class="form-control"
+                                        placeholder="Ingrese Nombre">
+                                </th>
+                                <th scope="col" colspan="1">
+                                    <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">ID</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">F/Entrega</th>
+                                <th scope="col">Actividad</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let ae of aes" class="text-center">
+                                <td>
+                                    <img (click)="abrirModal(ae)" style="cursor: pointer; width: 30px; height: 30px;"
+                                        src="./assets/img/ardefault.jpg">
+                                </td>
+                                <td>{{ae.descripcion}}</td>
+                                <td>{{ae.fecha_entrega | date : 'dd/MM/yyyy'}}</td>
+                                <td>{{ae.actividad.nombre}}</td>
+                                <td>
+                                    <a (click)="eliminar(ae)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtener(ae)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <p *ngIf="mensaje">
+                        {{mensaje}}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,380 @@
+<app-detalle-competencia-moda *ngIf="resultadoseleccionado" 
+    [resultadoact]="resultadoseleccionado" 
+    [visible]="estadoModal" (cerrar)="estadoModal = $event">
+
+</app-detalle-competencia-moda>
+<app-otra-calificacion-modal *ngIf="otraseleccionado" [otracalificacion]="otraseleccionado"
+    [visible]="estado_Modal" (cerrarya)="estado_Modal = $event">
+
+</app-otra-calificacion-modal>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            
+                            
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Entrega de notas
+                                    </h5>
+                                </a>
+                                
+                            </li> 
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+                            <li class="nav-item" style="text-align: right;">
+                                <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li>                  
+                
+                        </ul>
+                                   
+               
+                </div>
+           </nav>
+        </div>
+        <div *ngIf="mensajeEstado" class="card-body">
+            <h5 *ngIf="mensajeEstado">{{mensajeEstado}}</h5>
+        </div>
+    </div>
+    
+</div>
+<div *ngIf="periodo" class="container">    
+    <div class="card">
+        <div class="card-header">
+            <h5>Fromulario de calificaciones: Fecha: {{fechahoy | date : 'dd/MM/yyyy'}}</h5>
+            <div class="row">
+                <div class="col-sm">
+                    <ul *ngIf="dce" class="list-group text-dark">
+                        <li *ngIf="dce?.empleado" class="list-group-item">
+                            Docente: {{dce.empleado.nombre}}
+                        </li>
+                        <li *ngIf="dce?.curso" class="list-group-item">
+                            Curso: {{dce.curso.nombre}},  Grado: {{dce.grado.nombre_grado}},  Seccion:
+                            {{dce.seccion.nombre_seccion}}
+                        </li>
+                        <li *ngIf="periodo" class="list-group-item">
+                            Registro de calificaciones disponible entre: {{periodo.finicio | date : 'dd/MM/yyyy'}} y {{periodo.ffin | date : 'dd/MM/yyyy'}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <ul class="list-group text-dark mb-2">                       
+                                                                                 
+                            <li  class="list-group-item active">
+                                Competencias y Alumnos:
+                            </li>                            
+                                                        
+                        </ul>  
+                        <label for="">Seleccione competencia a evaluar</label>
+                        <select class="form-control" [formControl]="fcompetenciacurso">
+                            <option *ngIf="comError" style="color: red;">{{comError}}</option>
+                            <option *ngFor="let competenciacurso of competenciacursos" [ngValue]="competenciacurso">
+                                {{competenciacurso.competencia.nombre}}
+                            </option>
+                        </select>
+                        <p *ngIf="fcompetenciacurso.hasError('required') && fcompetenciacurso.touched">
+                            Campo requerido
+                        </p>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="">Seleccione Alumno</label>
+                        <select class="form-control" [formControl]="fdetalumno" (change)="optenerActividadEntregado()">
+                            <option *ngFor="let detalumno of detalumnos" [ngValue]="detalumno">{{detalumno.alumno.nombre}},
+                                {{detalumno.alumno.apellidos}}
+                            </option>
+                        </select>                        
+                        <p *ngIf="fdetalumno.hasError('required') && fdetalumno.touched">
+                            Campo requerido
+                        </p>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label for="">Seleccione Bimestre: </label>
+                        <select class="form-control" [formControl]="fbimestre">
+                            <option *ngFor="let bimestre of bimestres" [ngValue]="bimestre">
+                                Bimestre :{{bimestre.nombre}}--De: {{bimestre.fecha_inicio | date :'dd/MM/yyyy'}} --Hasta:{{bimestre.fecha_fin | date :'dd/MM/yyyy'}}
+                            </option>
+                        </select>                        
+                        <p *ngIf="mensajeBimestre">{{mensajeBimestre}}</p>                                               
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea rows="4" class="form-control" [formControl]="fdescripcion"></textarea>
+                    </div>
+
+                    <div class="form-group mt-2 mb-2">
+                        <ul class="list-group text-dark">                    
+                                              
+                            <li  class="list-group-item active">
+                                <a (click)="activarEntrega()" style="cursor: pointer;">¿Existe actividades no entregados?
+                                    ----click aqui-----
+                                </a>
+                            </li>                        
+                                                        
+                        </ul>
+                        <div *ngIf="estadoEntrega">
+                            <label for="">Selecione actividad</label>
+                            <select class="form-control" [formControl]="factplanteado">
+                                <option *ngIf="mensaje_Error" style="color: red;">{{mensaje_Error}}</option>
+                                <option *ngFor="let actplanteado of actplanteados" [ngValue]="actplanteado">
+                                    {{actplanteado.nombre}}
+                                </option>
+                            </select>  
+                        </div>                         
+                                              
+                    </div>
+                    <div *ngIf="estadoEntrega" class="form-group mt-2">
+                        <button (click)="elegirActividad()" [disabled]="!estado_Botones" class="btn btn-info form-control">Agregar Actividad</button>
+                    </div>
+                    <div *ngIf="estadoEntrega" class="form-group mt-2">
+                        <ul *ngIf="entregaTardia" class="list-group text-dark">                            
+                            <li *ngIf="entregaTardia?.actividad" class="list-group-item">
+                                Nombre de actividad: {{entregaTardia.actividad.nombre}}
+                            </li>
+                            <li  class="list-group-item">
+                                {{entregaTardia.descripcion}}
+                            </li>
+                            <li  class="list-group-item">
+                                <a (click)="realizarEntrega()" style="cursor: pointer; color: blue;">Realizar Entrega</a>
+                            </li>                       
+                        </ul>
+                    </div>
+                    
+                    
+                    <div class="form-group mt-2">
+                        <button *ngIf="botonGuardar" (click)="envioFinal()" [disabled]="!estadoBotones" class="form-control btn btn-primary">
+                            Guardar Resultados
+                        </button>                        
+                    </div>
+                    <div class="form-group mt-2">
+                        <button (click)="cancelar()" class="form-control btn btn-danger">Cancelar</button>
+                    </div>
+                </div>
+                <div class="col-md-4">                    
+                    <ul class="list-group text-dark mb-2">                       
+                                                                                 
+                        <li  class="list-group-item active">
+                            Lista de actividades entregados:
+                        </li>                        
+                                                    
+                    </ul> 
+                    <div class="form-group">
+                        <label for="">Fecha:</label>
+                        <input type="date" class="form-control" [formControl]="fechageneral" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Selecione actividad</label>
+                        <select class="form-control" [formControl]="factentregado">
+                            <option *ngIf="mensajeError" style="color: red;">{{mensajeError}}</option>
+                            <option *ngFor="let actentregado of actentregados" [ngValue]="actentregado">
+                                {{actentregado.actividad.nombre}}
+                            </option>
+                        </select>
+                        <p *ngIf="factentregado.hasError('required') && factentregado.touched">
+                            Campo requerido
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nota:</label>
+                        <input type="number" max="20" min="1" class="form-control" [formControl]="nota_entregado">
+                        <p *ngIf="nota_entregado.hasError('required') && nota_entregado.touched">
+                            Campo requerido
+                        </p>
+                        <p *ngIf="nota_entregado.hasError('max') && (nota_entregado.touched || nota_entregado.dirty)">
+                            Campo no válido
+                        </p>
+                        <p *ngIf="nota_entregado.hasError('min') && (nota_entregado.touched || nota_entregado.dirty)">
+                            Campo no válido
+                        </p>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button [disabled]="!estado_Botones" (click)="agregarResultadoAct()" class="form-control btn btn-info">Agregar Resultados</button>                        
+                    </div>
+                    <div  class="form-group mt-2 contenedor">
+                        <ul *ngFor="let resultadoact of resultadoacts" class="list-group text-dark">                            
+                            <span (click)="eliminarResultadoActividad(resultadoact)" class="cerrar">X</span>                                                        
+                            <li *ngIf="resultadoact?.idresultado" class="list-group-item">
+                                {{resultadoact.idresultado}}
+                            </li>                            
+                            <li class="list-group-item">
+                                Actividad: {{resultadoact.actividadentregado.actividad.nombre}}     
+                            </li>
+                            <li class="list-group-item">
+                                Fecha: {{resultadoact.fecha | date : 'dd-MM-yyyy'}}, Nota:{{resultadoact.nota}}     
+                            </li>
+                            
+                        </ul>                        
+                    </div>
+                    
+                </div>
+                <div class="col-md-4">                    
+                    <ul class="list-group text-dark mb-2">                       
+                                                                                 
+                        <li  class="list-group-item active">
+                            Registre otras calificaciones:
+                        </li>                        
+                                                    
+                    </ul> 
+                    <div class="form-group">
+                        <label for="">Fecha:</label>
+                        <input type="text" class="form-control" value="{{fechahoy | date : 'dd/MM/yyyy'}}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nombre o razón de la calificación</label>
+                        <input type="text" [formControl]="nombre_calificacion" class="form-control">
+                        <p *ngIf="nombre_calificacion.hasError('required') && nombre_calificacion.touched">
+                            Campo requerido
+                        </p>
+                    </div>     
+                    <div class="form-group">
+                        <label for="">Nota:</label>
+                        <input type="number" max="20" min="1" class="form-control" [formControl]="nota_calificacion">
+                        <p *ngIf="nota_calificacion.hasError('required') && nota_calificacion.touched">
+                            Campo requerido
+                        </p>
+                        <p *ngIf="nota_calificacion.hasError('max') && (nota_calificacion.touched || nota_calificacion.dirty)">
+                            Campo no válido
+                        </p>
+                        <p *ngIf="nota_calificacion.hasError('min') && (nota_calificacion.touched || nota_calificacion.dirty)">
+                            Campo no válido
+                        </p>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button [disabled]="!estado_Botones" (click)="agregarOtrasCalificaciones()" class="form-control btn btn-info">Agregar Otra Calificación</button>                        
+                    </div>
+                    <div  class="form-group mt-2 contenedor">
+                        <ul *ngFor="let otracalificacion of otrascalificaciones" class="list-group text-dark">                            
+                            <span (click)="eliminarOtraCalificacion(otracalificacion)" class="cerrar">X</span>                                                        
+                            <li *ngIf="otracalificacion?.idotracalificacion" class="list-group-item">
+                                {{otracalificacion.idotracalificacion}}
+                            </li>
+                            <li class="list-group-item">
+                                Alumno: {{otracalificacion.detallealumno.alumno.nombre}}, {{otracalificacion.detallealumno.alumno.apellidos}}     
+                            </li>
+                            <li class="list-group-item">
+                                Nombre: {{otracalificacion.nombre}}     
+                            </li>
+                            <li class="list-group-item">
+                                Fecha: {{otracalificacion.fecha | date : 'dd-MM-yyyy'}}, Nota:{{otracalificacion.nota}}     
+                            </li>
+                            
+                        </ul>                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h5>Lista de calificaciones</h5>
+        </div>
+        <div class="card-body">
+            <div *ngFor="let mdetallecom of mdetallecoms" class="row">
+                <ul class="list-group text-dark"> 
+                    <li class="list-group-item active">
+                        {{mdetallecom.fecha | date : 'dd/MM/yyyy'}}
+                    </li> 
+                    <li class="list-group-item">
+                        {{mdetallecom.nombre_alumno}}
+                    </li>                                       
+                    <li class="list-group-item">
+                        {{mdetallecom.nombre_competencia}}
+                    </li>
+                    <li *ngIf="mdetallecom?.nota && mdetallecom?.alias && mdetallecom?.nombre_bimestre" 
+                        class="list-group-item" style="display: inline-block;">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h6 style="color: blue;">Nivel de logro</h6>{{mdetallecom.nota}}
+                            </div>
+                            <div class="col-sm">
+                                <h6 style="color: blue;">Alias nivel de logro</h6>{{mdetallecom.alias}}
+                            </div>
+                            <div class="col-sm">
+                                <h6 style="color: blue;">Bimestre</h6>{{mdetallecom.nombre_bimestre}}
+                            </div>
+                        </div>                       
+                        
+                    </li>
+                    <li *ngIf="mdetallecom?.descripcion" class="list-group-item">
+                        {{mdetallecom.descripcion}}
+                    </li> 
+                    <p *ngIf="mdetallecom?.mensaje">
+                        {{mdetallecom.mensaje}}
+                    </p>
+                    
+                </ul>
+                                
+                <table class="table table-striped"> 
+                    <tbody>
+                        <tr>                            
+                            <td *ngFor="let resultado of mdetallecom.resultadoactividades">
+                                <tr>
+                                    <th *ngIf="resultado?.nota">RA</th>
+                                </tr>
+                                <tr>
+                                    <td *ngIf="resultado?.nota" style="border: 1px; padding: 1px;">NOTA</td>
+                                </tr>
+                                <tr>                                
+                                    <td *ngIf="resultado?.nota" style="border: 1px; padding: 1px;">{{resultado.nota}}</td>
+                                    <td>
+                                        <a (click)="obtenerResultado(resultado)" class="editar">
+                                            <img style="width: 20px; height: 20; " src="./assets/img/editpaste.png">
+                                        </a>
+                                    </td>
+                                </tr>                                                              
+                            </td>
+                            <td *ngFor="let otracalificacion of mdetallecom.otrascalificaciones">
+                                <tr>
+                                    <th *ngIf="otracalificacion?.nota">OC</th>
+                                </tr>
+                                <tr >
+                                    <td *ngIf="otracalificacion?.nota" style="border: 1px; padding: 1px;">NOTA</td>                                    
+                                </tr>
+                                <tr>
+                                    <td *ngIf="otracalificacion?.nota" style="border: 1px; padding: 1px;">{{otracalificacion.nota}}</td>                                                                     
+                                    <td>
+                                        <a (click)="obtenerOtraCalificacion(otracalificacion)" class="editar">
+                                            <img style="width: 20px; height: 20; " src="./assets/img/editpaste.png">
+                                        </a>
+                                    </td>
+                                </tr>                               
+                                
+                            </td>
+                            <td >
+                                <tr>
+                                    <th>Acciones</th>
+                                </tr>
+                                <tr>
+                                    <a (click)="eliminarDetalle(mdetallecom)" class="eliminar">
+                                        <img style="width: 25px; height: 25;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="listarInicio()" class="eliminar">
+                                        <img style="width: 25px; height: 25;" src="./assets/img/refresh.jpeg">
+                                    </a>
+                                </tr>
+                            </td>
+                            
+                        </tr>
+                    </tbody>
+                </table>                
+            </div>
+        </div>
+    </div>
+</div>

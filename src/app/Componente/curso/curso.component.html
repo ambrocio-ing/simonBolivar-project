@@ -1,0 +1,303 @@
+<div class="container ">
+    <div class="card">
+        <div class="card-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            
+                            
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Formulario para administrar cursos
+                                    </h5>
+                                </a>
+                                
+                            </li>                   
+                
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>
+                            <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                                <h3 style="color: black;">
+                                    {{ususervicio.usuario.empleado.nombre}}, {{ususervicio.usuario.empleado.apellidos}}
+                                </h3>
+                            </li>
+                            <li class="nav-item" style="text-align: right;">
+                                <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li>
+                        </ul>
+            
+                    
+                </div>
+            </nav>
+            
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <form [formGroup]="formCurso" (ngSubmit)="enviar($event)">
+                        <input type="hidden" formControlName="idcurso">
+                        <div class="row">
+
+                            <div class="form-group">
+                                <label for="codigo">Código:</label>
+                                <input type="text" formControlName="codigo" class="form-control">
+                                <p *ngIf="formCurso.get('codigo').hasError('required') && 
+                                        formCurso.get('codigo').touched ">
+                                    Campo requerido
+                                </p>
+                                <p *ngIf="formCurso.get('codigo').hasError('pattern') && 
+                                        (formCurso.get('codigo').touched || formCurso.get('codigo').dirty) ">
+                                    Campo no válido
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" formControlName="nombre" class="form-control">
+                                <p *ngIf="formCurso.get('nombre').hasError('required') && 
+                                        formCurso.get('nombre').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="nombre">Descripción:</label>
+                                <textarea rows="3" formControlName="descripcion" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input *ngIf="botonGuardar" type="submit"
+                                    class="btn btn-primary form-control mt-2" value="Guardar">
+                                <input *ngIf="botonEditar" type="submit"
+                                    class="btn btn-primary form-control mt-2" value="Editar">
+                                
+                            </div>
+                            <div class="form-group mt-2">
+                                <button (click)="limpiar()" type="button"
+                                    class="btn btn-danger form-control mt-2">Limpiar
+                                </button>
+                            </div>                            
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-8" style="overflow: scroll;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="3">
+                                    <h4>Lista de cursos</h4>
+                                </th>
+                                <th scope="col" colspan="1">
+                                    <input type="search" [formControl]="formBuscarNombre" class="form-control"
+                                        placeholder="Ingrese Nombre del curso">
+                                </th>
+                                <th scope="col">
+                                    <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">ID</th>
+                                <th scope="col">Código</th>
+                                <th scope="col">Curso</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let curso of cursos" class="text-center">
+                                <td width="20px">{{curso.idcurso}}</td>
+                                <td width="50px">{{curso.codigo}}</td>
+                                <td>{{curso.nombre}}</td>
+                                <td>{{curso.descripcion}}</td>
+                                <td>                                    
+                                    <a (click)="eliminar(curso)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtener(curso)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <p *ngIf="mensaje">
+                        {{mensaje}}
+                    </p>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Formulario para administrar la asignación de cursos y docentes</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <form [formGroup]="formDetalleCursoEmpleado" (ngSubmit)="enviarDetalle($event)">
+                        <input type="hidden" formControlName="iddetalle_ce">
+                        <div class="row">
+
+                            <div class="form-group">
+                                <label for="fecha">Fecha:</label>
+                                <input type="date" formControlName="fecha" class="form-control">
+                                <p *ngIf="formDetalleCursoEmpleado.get('fecha').hasError('required') && 
+                                    formDetalleCursoEmpleado.get('fecha').touched ">
+                                    Campo requerido
+                                </p>                                
+                            </div>
+                            <div class="form-group">
+                                <label>Selecione estado</label>
+                                <select formControlName="estado" class="form-control">
+                                    <option value="Activo">Activo</option>
+                                    <option value="Desactivo">Desactivo</option>
+                                </select>
+                                <p *ngIf="formDetalleCursoEmpleado.get('estado').hasError('required') && 
+                                    formDetalleCursoEmpleado.get('estado').touched ">
+                                    Campo requerido
+                                </p> 
+                            </div>
+                            <div class="form-group">
+                                <label for="curso">Curso:</label>
+                                <select formControlName="curso" class="form-control" [compareWith]="compararCurso">                                    
+                                    <option *ngFor="let curso of cursos_combo" [ngValue]="curso">
+                                        {{curso.nombre}}
+                                    </option>
+                                </select>
+                                <p *ngIf="formDetalleCursoEmpleado.get('curso').hasError('required') && 
+                                    formDetalleCursoEmpleado.get('curso').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="empleado">Docente:</label>
+                                <select formControlName="empleado" class="form-control" [compareWith]="compararEmpleado">                                    
+                                    <option *ngFor="let empleado of empleados" [ngValue]="empleado">
+                                        {{empleado.nombre}},{{empleado.apellidos}}
+                                    </option>
+                                </select>
+                                <p *ngIf="formDetalleCursoEmpleado.get('empleado').hasError('required') && 
+                                    formDetalleCursoEmpleado.get('empleado').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="grado">Selecione Grado:</label>
+                                <select formControlName="grado" class="form-control" [compareWith]="compararGrados">                                    
+                                    <option *ngFor="let grado of grados" [ngValue]="grado">
+                                        {{grado.nombre_grado}}
+                                    </option>
+                                </select>
+                                <p *ngIf="formDetalleCursoEmpleado.get('grado').hasError('required') && 
+                                    formDetalleCursoEmpleado.get('grado').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="seccion">Sección:</label>
+                                <select formControlName="seccion" class="form-control" [compareWith]="compararSecciones">                                    
+                                    <option *ngFor="let seccion of secciones" [ngValue]="seccion">
+                                        {{seccion.nombre_seccion}}
+                                    </option>
+                                </select>
+                                <p *ngIf="formDetalleCursoEmpleado.get('seccion').hasError('required') && 
+                                    formDetalleCursoEmpleado.get('seccion').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <input *ngIf="botonGuardarDetalle" type="submit"
+                                    class="btn btn-primary form-control mt-2" value="Guardar">
+                                <input *ngIf="botonEditarDetalle" type="submit"
+                                    class="btn btn-primary form-control mt-2" value="Editar">
+                                
+                            </div>
+                            <div class="form-group">
+                                <button *ngIf="botonEditarDetalle" (click)="cancelar()" type="button" class="btn btn-danger form-control mt-2">
+                                    Cancelar
+                                </button>
+                            </div>                                                        
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-8" style="overflow: scroll;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="3">
+                                    <h5>Asignaciones curso-docente</h5>
+                                </th>
+                                <th scope="col" colspan="2">
+                                    <input type="search" [formControl]="formBuscarDetalleNombre" class="form-control"
+                                        placeholder="Ingrese Nombre del curso">
+                                </th>
+                                <th scope="col">
+                                    <button (click)="buscarDetalle()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">ID</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Curso</th>
+                                <th scope="col">Empleado</th>
+                                <th scope="col">Periodo</th>
+                                <th scope="col">Estado</th>                                
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detalleCursoEmpleado of detalleCursoEmpleados" class="text-center">
+                                <td width="20px">{{detalleCursoEmpleado.iddetalle_ce}}</td>
+                                <td width="50px">{{detalleCursoEmpleado.fecha | date : "dd/MM/yyyy"}}</td>
+                                <td>{{detalleCursoEmpleado.curso.nombre}}</td>
+                                <td>{{detalleCursoEmpleado.empleado.nombre}}, {{detalleCursoEmpleado.empleado.apellidos}}</td>
+                                <td>{{detalleCursoEmpleado.grado.nombre_grado}}, {{detalleCursoEmpleado.seccion.nombre_seccion}}</td>
+                                <td>{{detalleCursoEmpleado.estado}}</td>
+                                <td>                                    
+                                    <a (click)="eliminarDetalle(detalleCursoEmpleado)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtenerDetalle(detalleCursoEmpleado)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <p *ngIf="mensajeDetalle">
+                        {{mensajeDetalle}}
+                    </p>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+
+</div>

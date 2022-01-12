@@ -1,0 +1,179 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">            
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            
+                           
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Formulario para administrar usuarios
+                                    </h5>
+                                </a>
+                                
+                            </li>                   
+                
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>
+                            <li class="mt-2" *ngIf="urservicio.isAuthenticated()">
+                                <h3 style="color: black;">
+                                    {{urservicio.usuario.empleado.nombre}}, {{urservicio.usuario.empleado.apellidos}}
+                                </h3>
+                            </li>
+                            <li class="nav-item" style="text-align: right;">
+                                <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li>
+                        </ul>
+            
+                   
+                </div>
+            </nav>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Nombre de usuario</label>
+                        <input type="text" [formControl]="nombreusuario" class="form-control">
+                        <span *ngIf="nombreusuario.hasError('required') && nombreusuario.touched">
+                            Campo requerido
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Roles</label>
+                        <select class="form-control" (change)="agregarLista()" [formControl]="frole">
+                            <option *ngFor="let role of roles" [ngValue]="role">{{role.nombre}}</option>
+                        </select>
+                        <span *ngIf="mensajeRoles">{{mensajeRoles}}</span>
+                        <ul *ngFor="let role_select of roles_seleccionados" class="list-group text-dark">
+                            <span (click)="eliminarrole(role_select)" style="cursor: pointer; font-size: 20px; font-weight: bold;">X</span>
+                            <li class="list-group-item active">
+                                {{role_select.nombre}}
+                            </li>                           
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" [formControl]="pass" class="form-control">
+                        <span *ngIf="pass.hasError('required') && pass.touched">
+                            Campo requerido
+                        </span>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <button *ngIf="estadoGuardar" (click)="guardar()" class="form-control btn btn-primary">Guardar</button>
+                        <button *ngIf="estadoEditar" (click)="editar()" class="form-control btn btn-primary">Editar</button>
+                    </div>
+                    <div class="form-group mt-4">                        
+                        <button (click)="cancelar()" class="form-control btn btn-danger">Cancelar</button>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+                    <table class="table tabla-striped">
+                        <thead>  
+                            <tr> 
+                                <th colspan="1">
+
+                                </th>                               
+                                <th scope="col" colspan="2">
+                                    <input type="search" [formControl]="formBuscar" class="form-control"
+                                        placeholder="Ingrese Usuario">
+                                </th>
+                                <th scope="col">
+                                    <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">ID</th>
+                                <th scope="col">Usuario</th>                               
+                                <th scope="col">Roles</th>
+                                <th scope="col">Acción</th>                       
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let usuario of usuarios" class="text-center">
+                                <td width="20px">{{usuario.idusuario}}</td>
+                                <td width="50px">{{usuario.username}}</td>                              
+                                <td>
+                                    <table>
+                                        <tr *ngFor="let ro_le of usuario.roles">
+                                            <td>{{ro_le.nombre}}</td>
+                                            <td>
+                                                <a (click)="eliminar_Rol(ro_le , usuario)" style="cursor: pointer; margin-left: 10px;">
+                                                    <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                                </a> 
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>                             
+                                <td width="100px">                                    
+                                    <a (click)="eliminarUsuario(usuario)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 25px; height: 25px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtener(usuario)" style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px; " src="./assets/img/editpaste.png">
+                                    </a>                                    
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <span *ngIf="mensaje">
+                        {{mensaje}}
+                    </span>
+                </div>  
+
+            </div>
+            <hr>
+            <div class="row mt-4">
+                <h5 style="font-size: 20px;">Asignar nueva contraseña</h5>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Nombre de usuario</label>
+                        <input type="text" [formControl]="fusername" class="form-control">
+                        <span *ngIf="fusername.hasError('required') && fusername.touched">
+                            Campo requerido
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>Nueva Contraseña</label>
+                        <input type="password" [formControl]="fpassword" class="form-control">
+                        <span *ngIf="fpassword.hasError('required') && fpassword.touched">
+                            Campo requerido
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button (click)="cambiarContra()" class="btn btn-primary">Cambiar contraseña</button>
+                </div>
+            </div>
+            <span *ngIf="mensajeCambio">{{mensajeCambio}}</span>
+        </div>
+    </div>
+</div>

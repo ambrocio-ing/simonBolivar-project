@@ -1,0 +1,267 @@
+<app-clase-archivos *ngIf="claseSeleccionado" [clase]="claseSeleccionado" [visibleModal]="estadoModal"
+    (cerrar)="estadoModal = $event"></app-clase-archivos>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                            <li class="nav-item" style="text-align: right;">
+                                <a (click)="irAperfil()" class="btn btn-outline-success"
+                                    style="margin-left: 5px; cursor:pointer;" aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Nueva clase fecha: {{fecha | date : 'dd/MM/yyyy'}}
+                                    </h5>
+                                </a>
+
+                            </li>
+
+                        </ul>
+                                           
+                </div>
+            </nav>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm">
+                    <ul *ngIf="dce" class="list-group text-dark" style="background-color: lightgrey;">
+                        <li *ngIf="dce?.curso" class="list-group-item">
+                            Curso: {{dce.curso.nombre}}
+                        </li>
+                        <li *ngIf="dce?.empleado" class="list-group-item">
+                            Docente: {{dce.empleado.nombre}}, {{dce.empleado.apellidos}}</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <form [formGroup]="formClase" (ngSubmit)="enviar($event)">
+                        <input type="hidden" formControlName="fidclase">
+                        <div class="form-group">
+                            <label for="ftema">Tema:</label>
+                            <input type="text" class="form-control" formControlName="ftema">
+                            <p *ngIf="formClase.get('ftema').hasError('required') && formClase.get('ftema').touched">
+                                Campo requerido
+                            </p>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="fdescripcion">Descripción:</label>
+                            <textarea rows="3" type="text" class="form-control" formControlName="fdescripcion">
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="flink">Link de la clase virtual</label>
+                            <input type="text" class="form-control" formControlName="flink">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="flink">Link de la clase grabada</label>
+                            <input type="text" class="form-control" formControlName="flink_clase">
+                        </div>
+
+                        <div class="form-group mt-4">
+
+                            <input *ngIf="botonGuardar" type="submit" class="btn btn-primary form-control"
+                                value="Guardar">
+                            <input *ngIf="botonEditar" type="submit" class="btn btn-primary form-control"
+                                value="Editar">
+
+                        </div>
+                        <div class="form-group mt-2">
+                            <button (click)="cancelar()" type="button" class="btn btn-danger form-control">Cancelar
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="col-md-9" *ngIf="dce?.curso" style="overflow: scroll;">
+                    <div  *ngIf="validarCurso()">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="2">
+                                        <h4>Lista de clases</h4>
+                                    </th>
+                                    <th scope="col" colspan="2">
+                                        <input [formControl]="formBuscar" type="search" class="form-control"
+                                            placeholder="Ingrese tema de la clase">
+
+                                    </th>
+                                    <th scope="col">
+                                        <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                    </th>
+
+                                </tr>
+                                <tr bgcolor="skyblue" class="text-center">
+                                    <th scope="col">Doc</th>
+                                    <th scope="col">Tema</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let clase of clases" class="text-center">
+                                    <td width="40px">
+                                        <abbr title="Agregar archivos">
+                                            <img (click)="cargarModal(clase)" width="30" height="30"
+                                                src="./assets/img/ardefault.jpg">
+                                        </abbr>
+                                    </td>
+                                    <td>{{clase.tema}}</td>
+                                    <td>{{clase.fecha | date : "dd/MM/yyyy"}}</td>
+                                    <td>{{clase.descripcion}}</td>
+                                    <td width="100px">
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td>
+                                                    <abbr title="Crear nueva actividad">
+                                                        <a (click)="addActividad(clase)" style="cursor: pointer;">
+                                                            <img style="width: 20px; height: 20;"
+                                                                src="./assets/img/actividad.png">
+                                                        </a>
+                                                    </abbr>
+                                                </td>
+                                                <td>
+                                                    <abbr title="Eliminar registro">
+                                                        <a (click)="eliminar(clase)"
+                                                            style="margin-left: 2px; cursor: pointer;">
+                                                            <img style="width: 20px; height: 20;"
+                                                                src="./assets/img/delete.png">
+                                                        </a>
+                                                    </abbr>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <abbr title="Editar registro">
+                                                        <a (click)="obtener(clase)" style=" cursor: pointer;">
+                                                            <img style="width: 20px; height: 20; "
+                                                                src="./assets/img/editpaste.png">
+                                                        </a>
+                                                    </abbr>
+                                                </td>
+                                                <td>
+                                                    <abbr title="Pasar asistencia">
+                                                        <a (click)="asistencia(clase)"
+                                                            style="margin-left: 2px; cursor: pointer;">
+                                                            <img style="width: 20px; height: 20; "
+                                                                src="./assets/img/asistencia.png">
+                                                        </a>
+                                                    </abbr>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                        <p *ngIf="mensaje">
+                            {{mensaje}}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-9" *ngIf="dce?.curso">
+                    <div  *ngIf="!validarCurso()">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="2">
+                                        <h4>Lista de clases</h4>
+                                    </th>
+                                    <th scope="col" colspan="2">
+                                        <input [formControl]="formBuscar" type="search" class="form-control"
+                                            placeholder="Ingrese tema de la clase">
+
+                                    </th>
+                                    <th scope="col">
+                                        <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                    </th>
+
+                                </tr>
+                                <tr bgcolor="skyblue" class="text-center">
+                                    <th scope="col">Doc</th>
+                                    <th scope="col">Tema</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let clase of clases" class="text-center">
+                                    <td width="40px">
+                                        <abbr title="Agregar archivos">
+                                            <img (click)="cargarModal(clase)" width="30" height="30"
+                                                src="./assets/img/ardefault.jpg">
+                                        </abbr>
+                                    </td>
+                                    <td>{{clase.tema}}</td>
+                                    <td>{{clase.fecha | date : "dd/MM/yyyy"}}</td>
+                                    <td>{{clase.descripcion}}</td>
+                                    <td width="100px">
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td>
+                                                    <abbr title="Eliminar registro">
+                                                        <a (click)="eliminar(clase)"
+                                                            style="margin-left: 2px; cursor: pointer;">
+                                                            <img style="width: 20px; height: 20;"
+                                                                src="./assets/img/delete.png">
+                                                        </a>
+                                                    </abbr>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <abbr title="Editar registro">
+                                                        <a (click)="obtener(clase)" style=" cursor: pointer;">
+                                                            <img style="width: 20px; height: 20; "
+                                                                src="./assets/img/editpaste.png">
+                                                        </a>
+                                                    </abbr>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                        <p *ngIf="mensaje">
+                            {{mensaje}}
+                        </p>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

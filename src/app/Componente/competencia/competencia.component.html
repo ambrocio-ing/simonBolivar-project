@@ -1,0 +1,274 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            
+                           
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" 
+                                    aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Admistración de competencias
+                                    </h5>
+                                </a>
+                                 
+                            </li>                   
+                
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+                            <li>
+                                <svg class="bi me-2" width="30" height="30">
+                                    <use xlink:href="#people-circle" />
+                                  </svg>
+                            </li>
+                            <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                                <h3 style="color: black;">
+                                    {{ususervicio.usuario.empleado.nombre}}, {{ususervicio.usuario.empleado.apellidos}}
+                                </h3>
+                            </li>
+                             
+                        </ul>
+                        <li class="nav-item" style="text-align: right;">
+                            <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer;" 
+                                aria-current="page">
+                                <h5 style="color: black; font-size: 15px;">
+                                    Ir a Perfil
+                                </h5>
+                            </a>
+                        </li>
+                    
+                </div>
+            
+            </nav>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <form [formGroup]="formCompetencia" (ngSubmit)="save($event)">
+                        <input type="hidden" formControlName="idcompetencia">
+                        <div class="form-group">
+                            <label for="nombre">Nombre de competencia:</label>
+                            <textarea rows="3" formControlName="nombre" class="form-control"></textarea>
+                            <p
+                                *ngIf="formCompetencia.get('nombre').hasError('required') && formCompetencia.get('nombre').touched">
+                                Campo requerido
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre">Descripción de competencia:</label>
+                            <textarea rows="4" formControlName="descripcion" class="form-control"></textarea>
+
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <input *ngIf="botonGuardar" type="submit" class="btn btn-primary form-control"
+                                value="Guardar">
+                            <input *ngIf="botonEditar" type="submit" class="btn btn-info form-control" value="Editar">
+                        </div>
+                        <div class="form-group mt-3">
+                            <button (click)="limpiar()" type="button"
+                                class="form-control btn btn-danger">Cancelar</button>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="col-md-9" style="overflow: scroll;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="2">
+                                    <h4>Lista de competencias</h4>
+                                </th>
+                                <th scope="col" colspan="1">
+                                    <input type="search" [formControl]="formBuscarCompetencia" class="form-control"
+                                        placeholder="Ingrese Nombre del curso">
+                                </th>
+                                <th scope="col">
+                                    <button (click)="buscarCom()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">ID</th>
+                                <th scope="col">Nombre Competencia</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let com of competencias" class="text-center">
+                                <td width="20px">{{com.idcompetencia}}</td>
+                                <td>{{com.nombre}}</td>
+                                <td>{{com.descripcion}}</td>
+                                <td>
+                                    <a (click)="seleccionar_com(com)" style="cursor: pointer;">
+                                        <img style="width: 18px; height: 18px;" src="./assets/img/seleccionar.png">
+                                    </a>
+                                    <a (click)="eliminar(com)" style="cursor: pointer; margin-left: 8px;">
+                                        <img style="width: 18px; height: 18px;" src="./assets/img/delete.png">
+                                    </a>
+                                    <a (click)="obtener(com)" style="cursor: pointer; margin-left: 8px;">
+                                        <img style="width: 18px; height: 18px; " src="./assets/img/editpaste.png">
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <p *ngIf="mensaje">
+                        {{mensaje}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-header">
+            <h5>Asigne competencias a los cursos</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <li class="list-group-item active">Liste Competencias:</li>
+                        <ul *ngFor="let competencia of selectCompetencias" class="list-group text-dark mt-2">
+                            <span (click)="eliminarDeLista(competencia)" style="cursor: pointer; color: red;">X</span>
+                            <li class="list-group-item">{{competencia.nombre}}</li>
+
+                        </ul>
+                    </div>
+
+                    <div class="form-group mt-2" style="overflow: scroll;">
+                        <li class="list-group-item active">Liste Cursos:</li>
+                        <ul *ngFor="let curso of selectCursos" class="list-group text-dark mt-2">
+
+                            <li class="list-group-item">
+                                <span (click)="eliminarCursoLista(curso)"
+                                    style="cursor: pointer; color: red; margin-right: 5px;">X</span>{{curso.codigo}},
+                                {{curso.nombre}}
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-8" style="overflow: scroll;">
+                    <div class="row">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="3">
+                                        <h4>Lista de cursos</h4>
+                                    </th>
+                                    <th scope="col" colspan="1">
+                                        <input type="search" [formControl]="formBuscar" class="form-control"
+                                            placeholder="Ingrese Nombre del curso">
+                                    </th>
+                                    <th scope="col">
+                                        <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                    </th>
+
+                                </tr>
+                                <tr bgcolor="skyblue" class="text-center">
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Código</th>
+                                    <th scope="col">Curso</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let curso of cursos" class="text-center">
+                                    <td width="20px">{{curso.idcurso}}</td>
+                                    <td width="50px">{{curso.codigo}}</td>
+                                    <td>{{curso.nombre}}</td>
+                                    <td>{{curso.descripcion}}</td>
+                                    <td>
+                                        <a (click)="seleccionar(curso)" style="cursor: pointer;">
+                                            <img style="width: 20px; height: 20;" src="./assets/img/seleccionar.png">
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                        <p *ngIf="mensajeBuscar">
+                            {{mensajeBuscar}}
+                        </p>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+
+                        </div>
+                        <div class="col-md-4">
+                            <button (click)="guardarDetalle()" class="btn btn-primary form-control">Guardar
+                                cambios</button>
+                        </div>
+                        <div class="col-md-4">
+                            <button (click)="cancelarOperacion()" class="btn btn-danger form-control">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>            
+        </div>
+    </div>
+    <div class="card mt-2" style="overflow: scroll;">
+        <div class="card-header">
+            <h4>Lista de asignaciones entre competencia y curso</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" colspan="2">
+                                
+                            </th>
+                            <th scope="col" colspan="1">
+                                <input type="search" [formControl]="form_Buscar" class="form-control"
+                                    placeholder="Ingrese Nombre del curso">
+                            </th>
+                            <th scope="col">
+                                <button (click)="buscarGeneral()" class="btn btn-success form-control">Buscar</button>
+                            </th>
+
+                        </tr>
+                        <tr bgcolor="skyblue" class="text-center">
+                            <th scope="col">ID</th>
+                            <th scope="col">Competencia</th>
+                            <th scope="col">Curso</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let comcurso of competenciacursos" class="text-center">
+                            <td width="20px">{{comcurso.idcompetenciacurso}}</td>
+                            <td>{{comcurso.competencia.nombre}}</td>
+                            <td>{{comcurso.curso.nombre}}</td>
+                            <td>
+                                <a (click)="eliminar_comcurso(comcurso)" style="cursor: pointer; margin-left: 8px;">
+                                    <img style="width: 25px; height: 25px;" src="./assets/img/delete.png">
+                                </a>
+                                
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+                <p *ngIf="mensajeya">
+                    {{mensajeya}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

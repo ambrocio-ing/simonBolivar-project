@@ -1,0 +1,31 @@
+p{
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.cerrar{
+    font-size: 1rem;    
+    top: 0;
+    right: 0;    
+    cursor: pointer;
+    color: red;
+    
+}
+
+.border{
+    border: 1px solid black;
+}
+
+.eliminar{
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.editar{
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+h4, h5, h6 {
+    font-size: 20px;
+}

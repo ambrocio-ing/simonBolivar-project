@@ -1,0 +1,23 @@
+span{
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+table{
+    border-collapse: collapse;
+}
+
+th , td {
+    border: 1px solid black;
+    
+}
+
+.vertical-text{
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    
+}
+
+table tr:hover{
+    background: #ccc;
+}

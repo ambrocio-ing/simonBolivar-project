@@ -1,0 +1,105 @@
+<div class="">
+  <div class="card">
+    <div class="card-header">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+        <div class="container-fluid">
+          
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+              
+              <li class="nav-item">
+                <a class="nav-link active" style="margin-left: 5px;" aria-current="page">
+                  <h5 style="color: black; font-size: 20px;">
+                    Lista de trámites
+                  </h5>
+                </a>
+
+              </li>
+
+            </ul>
+            <ul class="navbar-nav navbar-rigth">
+              <li>
+                <svg class="bi me-2" width="30" height="30">
+                    <use xlink:href="#people-circle" />
+                  </svg>
+            </li>
+              <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                <h3 style="color: black;">
+                  {{ususervicio.usuario.empleado.nombre}},{{ususervicio.usuario.empleado.apellidos}}
+                </h3>
+              </li>
+              <li class="nav-item" style="text-align: right;">
+                <a (click)="irAperfil()" class="btn btn-outline-success" style="margin-left: 5px; cursor:pointer;"
+                  aria-current="page">
+                  <h5 style="color: black; font-size: 15px;">
+                    Ir a Perfil
+                  </h5>
+                </a>
+              </li>
+            </ul>
+
+    
+        </div>
+      </nav>
+    </div>
+    <div class="card-body" style="overflow: scroll;">
+
+      <div class="row">
+        <h2>Lista de Documentos presentados en Mesa de Tramite</h2>
+        <p>Revisar y contestar los documentos cumpliendo los plazos estimados:</p>
+      </div>
+      <div class="row">
+        <table class="table table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th>DNI</th>
+              <th>NOMBRES</th>
+              <th>ASUNTO</th>
+              <th>DIRGIDO</th>
+              <th>FECHA</th>
+              <th>EMAIL</th>
+              <th>TELEFONO</th>
+              <th>DOCUMENTO</th>
+              <th>DETALLE</th>
+              <th>ESTADO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tramite of tramites">
+
+              <td>{{tramite.dni}}</td>
+              <td>{{tramite.nombre}},{{tramite.apellidos}}</td>
+              <td>{{tramite.asunto}}</td>
+              <td>{{tramite.dirigido}}</td>
+              <td>{{tramite.fecha | date : 'dd/MM/yyyy'}}</td>
+              <td>{{tramite.email}}</td>
+              <td>{{tramite.telefono}}</td>
+              <td>
+                <a href="{{urlBackend}}/archivos/tramostrar/{{tramite.archivo}}">
+                  Descargar
+                </a>
+              </td>
+              <td>{{tramite.detalle}}</td>
+              <td>
+                {{tramite.estado}}
+              </td>
+              <td>
+                <a (click)="revisar(tramite)" style="cursor: pointer;">
+                  <img style="width: 20px; height: 20; margin-left: 10px;" src="./assets/img/seleccionar.png">
+                </a>
+                <a (click)="eliminar(tramite)" style="cursor: pointer; margin-left: 8px;">
+                  <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                </a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

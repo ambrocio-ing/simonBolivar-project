@@ -1,0 +1,150 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h5 style="font-size: 20px;">Ingrese su tramite</h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mt-2">
+                <form [formGroup]="formTramite" (ngSubmit)="save($event)">
+                    <input type="hidden" formControlName="idtramite">
+                    <input type="hidden" formControlName="estado">
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <div class="form-group">
+                                <label for="dni">DNI:</label>
+                                <input type="text" formControlName="dni" class="form-control">
+                                <p
+                                    *ngIf="formTramite.get('dni').touched && formTramite.get('dni').hasError('required')">
+                                    Campo requerido
+                                </p>
+                                <p
+                                    *ngIf="(formTramite.get('dni').touched || formTramite.get('dni').dirty) && formTramite.get('dni').hasError('pattern')">
+                                    Complete 8 caracteres
+                                </p>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" formControlName="nombre" class="form-control">
+                                <p
+                                    *ngIf="formTramite.get('nombre').hasError('required') && formTramite.get('nombre').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="apellidos">Apellidos:</label>
+                                <input type="text" formControlName="apellidos" class="form-control">
+                                <p
+                                    *ngIf="formTramite.get('apellidos').hasError('required') && formTramite.get('apellidos').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="text" formControlName="email" class="form-control">
+                                <p
+                                    *ngIf="formTramite.get('email').hasError('required') && formTramite.get('email').touched">
+                                    Campo requerido
+                                </p>
+                                <p
+                                    *ngIf="formTramite.get('email').hasError('pattern') && (formTramite.get('email').touched || formTramite.get('email').dirty)">
+                                    Ingrese un correo válido
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefono">Telefono</label>
+                                <input type="text" formControlName="telefono" class="form-control">
+                                <div>
+                                    <p
+                                        *ngIf="formTramite.get('telefono').hasError('required') && formTramite.get('telefono').touched">
+                                        Campo requerido
+                                    </p>
+                                    <p
+                                        *ngIf="formTramite.get('telefono').hasError('pattern') && (formTramite.get('telefono').touched || formTramite.get('telefono').dirty)">
+                                        Ingrese número de 7 a 9 cifras
+                                    </p>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="form-group">
+                                <label for="telefono">Asunto:</label>
+                                <textarea rows="2" type="text" formControlName="asunto" class="form-control"></textarea>
+                                <div>
+                                    <p
+                                        *ngIf="formTramite.get('asunto').hasError('required') && formTramite.get('asunto').touched">
+                                        Campo requerido
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefono">Dirigido a:</label>
+                                <textarea rows="3" type="text" formControlName="dirigido"
+                                    class="form-control"></textarea>
+                                <div>
+                                    <p
+                                        *ngIf="formTramite.get('dirigido').hasError('required') && formTramite.get('dirigido').touched">
+                                        Campo requerido
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fecha">Fecha:</label>
+                                <input type="text" formControlName="fecha" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="form-group">
+                                <label for="archivo">Adjuntar documento:</label>
+                                <input (change)="capturarArchivo($event)" type="file" formControlName="archivo" class="form-control">
+                                <p
+                                    *ngIf="formTramite.get('archivo').hasError('required') && formTramite.get('archivo').touched">
+                                    Campo requerido
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="detalle">Fundamente su tramite:</label>
+                                <textarea rows="5" type="text" formControlName="detalle"
+                                    class="form-control"></textarea>
+                                <div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary form-control mt-4" value="Enviar">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="row">
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

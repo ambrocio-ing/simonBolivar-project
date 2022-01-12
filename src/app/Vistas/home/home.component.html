@@ -1,0 +1,59 @@
+<body>
+    <header>
+        <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
+              style="height: 100%; width: 100%;">
+              <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
+                  style="stroke: none; fill:  rgb(199, 230, 255);;"></path>
+          </svg></div>
+
+  </header>
+    <main>
+        <section class="contenedor sobre-nosotros">
+            <h2 class="titulo">NOSOTROS</h2>
+            <div class="contenedor-sobre-nosotros">
+                <img src="./assets/img/1.jpg" alt="" class="imagen-about-us">
+                <div class="contenido-textos">
+                    <h3><span>1</span>Calidad de Educacion</h3>
+                    <p>Contamos con la mejor plana docente en el norte chico, impulsando el desarrollo cognitivo de los
+                        estudiantes
+                        con la vision de construir unos profesionales de calidad
+                    </p>
+                    <h3><span>2</span>Gestion Integral</h3>
+                    <p>Personal capactiado para agilizar las gestiones internas y externas de la Institucion Educativa
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="contenedor sobre-nosotros">
+            
+            <h2 class="titulo">NOTICIAS</h2>
+            <div class="contenedor-sobre-nosotros">
+                <!--<img height="200" src="./assets/img/regreso.png" alt="" class="img-fluid">-->
+                <div class="contenido-textos" style="text-align: center;">
+                    <div class="" *ngFor="let cronograma of cronogramas">
+                        <h3>FECHA: -- {{cronograma.fecha | date : 'dd/MM/yyyy'}}</h3>
+                        <iframe *ngIf="cronograma?.link_video" width="500" height="315" style="margin-bottom: 10px;" [src]="getVideoIframe(cronograma.link_video)"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>                     
+                           
+                        <img width="500" height="400" *ngIf="cronograma?.archivo"
+                            src="{{urlBackend}}/archivos/crmostrar/{{cronograma.archivo}}">
+                            <div class="" *ngIf="cronograma?.descripcion">
+                        <p style=" margin-top: 5px; border-radius: 10px; background-color: hsla(202, 90%, 70%, 0.664);text-align: center;">{{cronograma.descripcion}}</p>
+                            </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>        
+    </main>
+
+    <footer>
+        <div class="contenedor-footer">
+                <span class="text-muted"><h4>&copy; 2021 PAGINA DESARROLLADO POR H.T.E. S.A.C. CONTACTO: 914-900-491</h4></span>
+            </div>
+           <br>      
+    </footer>
+</body>

@@ -1,0 +1,173 @@
+
+    <body>
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="people-circle" viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+        <path fill-rule="evenodd"
+          d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+      </symbol>
+    </svg>
+      <main>
+<div class="container">
+    
+    <div class="card">
+        <div class="card-header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+                <div class="container-fluid">
+                    
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    
+                            
+                            <li class="nav-item">
+                                <a class="nav-link active" style="margin-left: 5px;" aria-current="page">
+                                    <h5 style="color: black; font-size: 20px;">
+                                        Formulario para administrar horarios
+                                    </h5>
+                                </a>
+    
+                            </li>
+    
+                        </ul>
+                        <ul class="navbar-nav navbar-rigth">
+<li>
+    <svg class="bi me-2" width="30" height="30">
+        <use xlink:href="#people-circle" />
+      </svg>
+</li>
+                            <li class="mt-2" *ngIf="ususervicio.isAuthenticated()">
+                                <h3 style="color: black;">
+                                    {{ususervicio.usuario.empleado.nombre}}, {{ususervicio.usuario.empleado.apellidos}}
+                                </h3>
+                            </li>
+                            <li class="nav-item" style="text-align: right;">
+                                <a (click)="irAperfil()" class="btn btn-outline-success"
+                                    style="margin-left: 5px; cursor:pointer;" aria-current="page">
+                                    <h5 style="color: black; font-size: 15px;">
+                                        Ir a Perfil
+                                    </h5>
+                                </a>
+                            </li>
+                           
+                        </ul>
+    
+                   
+                </div>
+            </nav>
+        </div>
+    
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <form [formGroup]="fhorario" (ngSubmit)="enviar($event)">
+                        <input type="hidden" formControlName="idhorario">
+                        <div class="row">
+    
+                            <div class="form-group">
+                                <label for="fecha">Fecha:</label>
+                                <input type="date" formControlName="fecha" class="form-control">
+                                <p *ngIf="fhorario.get('fecha').hasError('required') && 
+                                    fhorario.get('fecha').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>                        
+                            
+                            <div class="form-group">
+                                <label for="archivo">Imagen:</label>
+                                <input type="file" class="form-control" formControlName="archivo" (change)="capturarFoto($event)" >
+                                <p *ngIf="fhorario.get('archivo').hasError('required') && 
+                                    fhorario.get('archivo').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="grado">Selecione Grado:</label>
+                                <select formControlName="grado" class="form-control">
+                                    <option *ngFor="let grado of grados" [ngValue]="grado">
+                                        {{grado.nombre_grado}}
+                                    </option>
+                                </select>
+                                <p *ngIf="fhorario.get('grado').hasError('required') && 
+                                    fhorario.get('grado').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="seccion">Sección:</label>
+                                <select formControlName="seccion" class="form-control">
+                                    <option *ngFor="let seccion of secciones" [ngValue]="seccion">
+                                        {{seccion.nombre_seccion}}
+                                    </option>
+                                </select>
+                                <p *ngIf="fhorario.get('seccion').hasError('required') && 
+                                    fhorario.get('seccion').touched ">
+                                    Campo requerido
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <input [disabled]="!estadoBoton" type="submit" class="btn btn-primary form-control mt-2"
+                                    value="Guardar">                            
+    
+                            </div>                       
+    
+                        </div>
+                    </form>
+                </div>
+    
+                <div class="col-md-8" style="overflow: scroll;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="4">
+                                    <h5 style="font-size: 20px;">Lista de horarios</h5>
+                                </th>
+                                <th scope="col" colspan="1">
+                                    <input type="date" [formControl]="formBuscar" class="form-control">
+                                </th>
+                                <th scope="col">
+                                    <button (click)="buscar()" class="btn btn-success form-control">Buscar</button>
+                                </th>
+    
+                            </tr>
+                            <tr bgcolor="skyblue" class="text-center">
+                                <th scope="col">ID</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Imagen</th>                            
+                                <th scope="col">Grado</th>
+                                <th scope="col">Seccion</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let horario of horarios" class="text-center">
+                                <td width="20px">{{horario.idhorario}}</td>
+                                <td width="50px">{{horario.fecha | date : "dd/MM/yyyy"}}</td>
+                                <td>
+                                    <a *ngIf="horario?.archivo" href="{{urlBackend}}/archivos/homostrar/{{horario.archivo}}">Descargar</a>
+                                    <span *ngIf="!horario?.archivo">Sin archivo</span>
+                                </td>                            
+                                <td>{{horario.grado.alias_grado}}</td>
+                                <td>{{horario.seccion.nombre_seccion}}</td>
+                                <td>
+                                    <a (click)="eliminar(horario)"
+                                        style="cursor: pointer; margin-left: 10px;">
+                                        <img style="width: 20px; height: 20px;" src="./assets/img/delete.png">
+                                    </a>
+                                    
+                                </td>
+    
+                            </tr>
+    
+                        </tbody>
+    
+                    </table>
+                    <p *ngIf="mensajeHorario">
+                        {{mensajeHorario}}
+                    </p>
+                </div>
+    
+            </div>
+    
+        </div>
+    </div>
+</div>
+</main></body>
