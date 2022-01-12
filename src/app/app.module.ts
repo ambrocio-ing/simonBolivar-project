@@ -82,7 +82,7 @@ import { TutorComponent } from './Componente/tutor/tutor.component';
 import { BimestreComponent } from './Componente/bimestre/bimestre.component';
 import { FichaAsistenciaComponent } from './Componente/ficha-asistencia/ficha-asistencia.component';
 import { DetalleBimestreCompetenciaComponent } from './Componente/detalle-bimestre-competencia/detalle-bimestre-competencia.component';
-import { RegistroAhuxiliarComponent } from './Componente/registro-ahuxiliar/registro-ahuxiliar.component';
+import { RegistroAhuxiliarComponent } from './Componente/registro-auxiliar/registro-ahuxiliar.component';
 import { UsuariosComponent } from './Componente/usuarios/usuarios.component';
 import { LoginComponent } from './Componente/login/login.component';
 import { HomeComponent } from './Vistas/home/home.component';
