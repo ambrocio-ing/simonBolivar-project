@@ -315,7 +315,7 @@ export class RegistroAhuxiliarComponent implements OnInit {
     this.dbcservicio.descargaExcelTres(this.dceseleccionado.iddetalle_ce, this.fechaconsulta).subscribe(dato => {
       const blob = new Blob([dato],{type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
       let numero = Math.round(Math.random() * (12 - 10 )+10);
-      saveAs(blob, numero+''+this.dceseleccionado.curso.nombre.replace(/\s+/g,'')+'registroAhuxiliar.xlsx');     
+      saveAs(blob, numero+''+this.dceseleccionado.curso.nombre.replace(/\s+/g,'')+'registroAhuxiliar.xls');     
     }, err => {
       alert("No se pudo descargar el documento");
     });
@@ -325,7 +325,7 @@ export class RegistroAhuxiliarComponent implements OnInit {
     this.dbcservicio.descargaExcelDos(this.dceseleccionado.iddetalle_ce, this.fechaconsulta).subscribe(dato => {
       const blob = new Blob([dato],{type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
       let numero = Math.round(Math.random() * (12 - 10 )+10);
-      saveAs(blob, numero+''+this.dceseleccionado.curso.nombre.replace(/\s+/g,'')+'registroAhuxiliar.xlsx');     
+      saveAs(blob, numero+''+this.dceseleccionado.curso.nombre.replace(/\s+/g,'')+'registroAhuxiliar.xls');     
     }, err => {
       alert("No se pudo descargar el documento");
     });
@@ -335,7 +335,7 @@ export class RegistroAhuxiliarComponent implements OnInit {
     this.dbcservicio.descargaExcelUno(this.dceseleccionado.iddetalle_ce, this.fechaconsulta).subscribe(dato => {
       const blob = new Blob([dato],{type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
       let numero = Math.round(Math.random() * (12 - 10 )+10);
-      saveAs(blob, numero+''+this.dceseleccionado.curso.nombre.replace(/\s+/g,'')+'registroAhuxiliar.xlsx');       
+      saveAs(blob, numero+''+this.dceseleccionado.curso.nombre.replace(/\s+/g,'')+'registroAhuxiliar.xls');       
     }, err => {
       alert("No se pudo descargar el documento");
     });
