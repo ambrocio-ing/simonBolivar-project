@@ -68,7 +68,7 @@ export class IntCalAluComponent implements OnInit {
     this.daservicio.descargarLibreta(this.detallealumno.iddetalle_alumno).subscribe(dato => {
       const blob = new Blob([dato],{type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
       let numero = Math.round(Math.random() * (12 - 10 )+10);
-      saveAs(blob, numero+''+this.detallealumno.alumno.nombre.replace(/\s+/g,'')+'libreta.xls'); 
+      saveAs(blob, numero+''+this.detallealumno.alumno.nombre.replace(/\s+/g,'')+'libreta.xlsx'); 
     });
   }   
 
