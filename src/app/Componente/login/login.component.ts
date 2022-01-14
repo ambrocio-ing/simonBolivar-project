@@ -41,6 +41,14 @@ export class LoginComponent implements OnInit {
     usu.password = this.flogin.get('fpassword')?.value;
   }
 
+  limpiarForm(){
+    this.flogin.setValue({
+      fusername : "",
+      fpassword : "",
+      facceso : ""
+    });
+  }
+
   estadoBoton:Boolean;
   ngOnInit(): void {
     this.estadoBoton = true;
@@ -103,6 +111,7 @@ export class LoginComponent implements OnInit {
           this.usualumno.guardarUsuario(uTemporal);
 
           if(this.usualumno.verificarRole("ROLE_ESTUDIANTE")){
+            this.limpiarForm();
             this.router.navigate(['aula']);
           }
           else{
@@ -125,6 +134,7 @@ export class LoginComponent implements OnInit {
           this.ususervicio.guardarUsuario(uTemporal);
           if(this.ususervicio.verificarRole("ROLE_ADMIN") || this.ususervicio.verificarRole("ROLE_ADMINISTRATIVO") || this.ususervicio.verificarRole("ROLE_USER")
            || this.ususervicio.verificarRole("ROLE_AHUXILIAR")){
+            this.limpiarForm();
             this.router.navigate(['intra/personal']);
           }
           else{
@@ -146,6 +156,7 @@ export class LoginComponent implements OnInit {
           let uTemporal:Usuario = datos;      
           this.ususervicio.guardarUsuario(uTemporal);
           if(this.ususervicio.verificarRole("ROLE_DOCENTE")){
+            this.limpiarForm();
             this.router.navigate(['intra/docente']);
           }
           else{
@@ -167,6 +178,7 @@ export class LoginComponent implements OnInit {
           
           let uTemporal:Apoderado = dato;      
           this.usuapoderado.guardarUsuario(uTemporal);
+          this.limpiarForm();
           if(this.usuapoderado.verificarRole("ROLE_APODERADO")){
             this.router.navigate(['apo/intra']);
           }
